@@ -1,0 +1,128 @@
+process MONITOR = { 
+	
+	source = HcalTBSource { 
+#		untracked vstring fileNames = { '/uscms_data/d1/jmmans/tutorial_data/HTB_011609.root' }
+#		untracked vstring fileNames = { '/uscms_data/d1/jmmans/tutorial_data/HTBqc_001042.root' }
+		
+		untracked vstring fileNames = { '/uscms_data/d1/wfisher/tmp_dat/HTBqc_002086.root',
+						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002087.root',
+						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002088.root',
+						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002089.root',
+						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002090.root',
+						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002091.root',
+						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002092.root',
+						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002093.root',
+						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002094.root',
+						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002096.root',
+						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002097.root',
+						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002098.root',
+						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002142.root',
+						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002143.root' }
+
+
+		untracked int32 maxEvents = -1
+                untracked vstring streams = { 'HCAL_DCC020:20','HCAL_Trigger','HCAL_SlowData','HCAL_TDC:5' }
+	}
+	
+	service = DaqMonitorROOTBackEnd{ 
+		untracked int32 vsize = 1000
+		untracked int32 hsize = 1000
+	}
+	
+	service = MonitorDaemon{
+	       #	 if true, will automatically start DQM thread in background
+	       #  (default: false)
+	       untracked bool AutoInstantiate = true
+
+	        # if >=0, upon a connection problem, the source will automatically 
+		# attempt to reconnect with a time delay (secs) specified here 
+	        # (default: 5)
+	        untracked int32 reconnect_delay = 5
+
+       # collector hostname
+       # (default: localhost)
+       untracked string DestinationAddress = "localhost"
+
+       # port for communicating with collector
+       # (default: 9090)
+       untracked int32 SendPort = 9090
+
+       # monitoring period in ms (i.e. how often monitoring elements 
+       # are shipped to the collector
+       # (default: 1000)
+       untracked int32 UpdateDelay = 1000
+       # name of DQM source
+       # (default: DQMSource)
+       untracked string NameAsSource = "HcalMonitor"
+     }
+
+
+	module hcalMonitor = HcalMonitorModule{
+	       untracked bool DaqMonitorBEInterface = true
+	       untracked bool MonitorDaemon = true
+	       untracked string outputFile = 'HcalMonitorModule.root'
+	       untracked string readoutMapSource = 'file:///uscms_data/d1/jmmans/tutorial_data/maps/hbho_ring12_tb04.txt'
+	       untracked int32 HcalFirstFED = 20
+               untracked vint32 FEDs = { 20 }
+        }
+     
+     	module unpacker = HcalRawToDigi {
+                untracked int32 firstSample = 6
+                untracked int32 lastSample = 15
+                untracked int32 HcalFirstFED = 20
+                untracked vint32 FEDs = { 20 }
+		untracked bool FilterDataQuality = true
+		untracked bool FilterAmplitude = false
+		untracked int32 FilterAmpBegin = 0
+		untracked int32 FilterAmpEnd = 7
+		untracked double FilterAmpLevel = 22.0
+		untracked string readoutMapSource = 'file:///uscms_data/d1/jmmans/tutorial_data/maps/hbho_ring12_tb04.txt'
+	}
+
+	module reco_hbhe = HcalSimpleReconstructor {
+	       untracked int32 firstSample = 4
+	       untracked int32 samplesToAdd = 4
+	       untracked string Subdetector = 'HBHE'
+	}
+
+	module reco_ho = HcalSimpleReconstructor {
+	       untracked int32 firstSample = 4
+	       untracked int32 samplesToAdd = 4
+	       untracked string Subdetector = 'HO'
+	}
+
+	module tbunpacker = HcalTBObjectUnpacker {
+	       int32 HcalTriggerFED  = 1
+	       int32 HcalSlowDataFED = -1
+	       int32 HcalTDCFED      = -1
+	       bool IncludeUnmatchedHits = false
+	}
+
+	module dumper = HcalDigiDump { }
+
+        module dumper2 = HcalRecHitDump { }
+
+        es_module = HcalDbProducer {untracked string dbSource = "hardcode"}
+
+	es_source es_0 = HcalDbSource {}
+
+	es_source es_1 = EmptyESSource {untracked string recordName = "HcalPedestalsRcd"
+                                   untracked bool iovIsRunNotTime = true
+				   untracked vuint32 firstValid = {1,2,3}
+                                  }
+	es_source es_2 = EmptyESSource {untracked string recordName = "HcalPedestalWidthsRcd"
+                                   untracked bool iovIsRunNotTime = true
+				   untracked vuint32 firstValid = {1,2,3}
+                                  }
+	es_source es_3 = EmptyESSource {untracked string recordName = "HcalGainsRcd"
+                                   untracked bool iovIsRunNotTime = true
+				   untracked vuint32 firstValid = {1,2,3}
+                                  }
+	es_source es_4 = EmptyESSource {untracked string recordName = "HcalGainWidthsRcd"
+                                   untracked bool iovIsRunNotTime = true
+				   untracked vuint32 firstValid = {1,2,3}
+                                  }
+
+	path p = { unpacker, tbunpacker, reco_ho, reco_hbhe, hcalMonitor}
+
+}
