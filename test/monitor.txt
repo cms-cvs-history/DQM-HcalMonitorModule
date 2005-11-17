@@ -3,21 +3,22 @@ process MONITOR = {
 	source = HcalTBSource { 
 #		untracked vstring fileNames = { '/uscms_data/d1/jmmans/tutorial_data/HTB_011609.root' }
 #		untracked vstring fileNames = { '/uscms_data/d1/jmmans/tutorial_data/HTBqc_001042.root' }
+
 		
-		untracked vstring fileNames = { '/uscms_data/d1/wfisher/tmp_dat/HTBqc_002086.root',
-						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002087.root',
-						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002088.root',
-						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002089.root',
-						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002090.root',
-						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002091.root',
-						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002092.root',
-						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002093.root',
-						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002094.root',
-						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002096.root',
-						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002097.root',
-						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002098.root',
-						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002142.root',
-						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002143.root' }
+		untracked vstring fileNames = { '/uscms_data/d1/wfisher/tmp_dat/HTBqc_002143.root' }
+#						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002087.root',
+#						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002088.root',
+#						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002089.root',
+#						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002090.root',
+#						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002091.root',
+#						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002092.root',
+#						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002093.root',
+#						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002094.root',
+#						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002096.root',
+#						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002097.root',
+#						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002098.root',
+#						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002142.root',
+#						'/uscms_data/d1/wfisher/tmp_dat/HTBqc_002143.root' }
 
 
 		untracked int32 maxEvents = -1
@@ -67,7 +68,7 @@ process MONITOR = {
         }
      
      	module unpacker = HcalRawToDigi {
-                untracked int32 firstSample = 6
+                untracked int32 firstSample = 4
                 untracked int32 lastSample = 15
                 untracked int32 HcalFirstFED = 20
                 untracked vint32 FEDs = { 20 }
@@ -89,6 +90,12 @@ process MONITOR = {
 	       untracked int32 firstSample = 4
 	       untracked int32 samplesToAdd = 4
 	       untracked string Subdetector = 'HO'
+	}
+
+	module reco_hf = HcalSimpleReconstructor {
+	       untracked int32 firstSample = 4
+	       untracked int32 samplesToAdd = 4
+	       untracked string Subdetector = 'HF'
 	}
 
 	module tbunpacker = HcalTBObjectUnpacker {
@@ -123,6 +130,6 @@ process MONITOR = {
 				   untracked vuint32 firstValid = {1,2,3}
                                   }
 
-	path p = { unpacker, tbunpacker, reco_ho, reco_hbhe, hcalMonitor}
+	path p = { unpacker, tbunpacker, reco_ho, reco_hf, reco_hbhe, hcalMonitor}
 
 }
