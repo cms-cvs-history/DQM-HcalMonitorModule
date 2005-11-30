@@ -65,6 +65,12 @@ process MONITOR = {
 	       untracked string readoutMapSource = 'file:///uscms_data/d1/jmmans/tutorial_data/maps/hbho_ring12_tb04.txt'
 	       untracked int32 HcalFirstFED = 20
                untracked vint32 FEDs = { 20 }
+
+	       untracked bool RecHitsPerChannel = true
+	       untracked bool RecHitMonitor = true
+
+	       untracked bool DigiMonitor = true
+
         }
      
      	module unpacker = HcalRawToDigi {
