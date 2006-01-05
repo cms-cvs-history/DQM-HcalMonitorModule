@@ -58,16 +58,16 @@ process MONITOR = {
         }
      
      	module unpacker = HcalRawToDigi {
-                untracked int32 firstSample = 6
-                untracked int32 lastSample = 15
+                untracked int32 firstSample = 5
+                untracked int32 lastSample = 14
                 untracked int32 HcalFirstFED = 20
                 untracked vint32 FEDs = { 20 }
 		untracked bool FilterDataQuality = true
-		untracked bool FilterAmplitude = true
-		untracked int32 FilterAmpBegin = 0
-		untracked int32 FilterAmpEnd = 10
-		untracked double FilterAmpLevel = 25.0
-		untracked string readoutMapSource = 'file:///uscms_data/d1/jmmans/tutorial_data/maps/hbho_ring12_tb04.txt'
+		untracked bool FilterAmplitude = false
+		untracked int32 FilterAmpBegin = 4
+		untracked int32 FilterAmpEnd = 7
+		untracked double FilterAmpLevel = 22.0
+		untracked string readoutMapSource = 'file://hbhe_tb04.txt'
 	}
 
 	module reco_hbhe = HcalSimpleReconstructor {
@@ -96,29 +96,25 @@ process MONITOR = {
 	}
 
 	module dumper = HcalDigiDump { }
-
         module dumper2 = HcalRecHitDump { }
+	es_module = HcalDbProducer {}
+	es_source = HcalHardcodeCalibrations {
+		untracked vstring toGet = {
+			  "Pedestals","PedestalWidths",
+			  "Gains", "GainWidths", "QIEShape", "QIEData",
+			  "channelQuality", "electronicsMap"}
+	}
 
-        es_module = HcalDbProducer {untracked string dbSource = "hardcode"}
+	es_source = XMLIdealGeometryESSource {
+		FileInPath GeometryConfiguration = 'Geometry/CMSCommonData/data/configuration.xml'
+		string rootNodeName = 'cms:OCMS'
+	}
 
-	es_source es_0 = HcalDbSource {}
-
-	es_source es_1 = EmptyESSource {untracked string recordName = "HcalPedestalsRcd"
-                                   untracked bool iovIsRunNotTime = true
-				   untracked vuint32 firstValid = {1,2,3}
-                                  }
-	es_source es_2 = EmptyESSource {untracked string recordName = "HcalPedestalWidthsRcd"
-                                   untracked bool iovIsRunNotTime = true
-				   untracked vuint32 firstValid = {1,2,3}
-                                  }
-	es_source es_3 = EmptyESSource {untracked string recordName = "HcalGainsRcd"
-                                   untracked bool iovIsRunNotTime = true
-				   untracked vuint32 firstValid = {1,2,3}
-                                  }
-	es_source es_4 = EmptyESSource {untracked string recordName = "HcalGainWidthsRcd"
-                                   untracked bool iovIsRunNotTime = true
-				   untracked vuint32 firstValid = {1,2,3}
-                                  }
+        es_module = HcalHardcodeGeometryEP {}
+        es_module = CaloTowerHardcodeGeometryEP {}
+	es_module = CaloGeometryBuilder {}
+	es_module = EcalBarrelGeometryEP {}
+	module HcalDbAnalyzer = HcalDbAnalyzer {}
 
 	path p = { unpacker, tbunpacker, reco_ho, reco_hf, reco_hbhe, hcalMonitor}
 
