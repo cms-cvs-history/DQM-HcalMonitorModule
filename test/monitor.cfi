@@ -129,12 +129,12 @@ process MONITOR = {
   es_module = HcalDbProducer {}
 
   es_source es_hardcode = HcalHardcodeCalibrations { untracked vstring toGet = {"Pedestals", "PedestalWidths", "Gains", "GainWidths", "QIEShape", "QIEData", "ChannelQuality"}}
- es_source es_ascii = HcalTextCalibrations { VPSet input = {
-                                              {
-						string object = "ElectronicsMap"
-						string file = "hbho_ring12_tb04.txt"
-					       }
-					      }
-					     }
+
+es_source es_ascii = HcalTextCalibrations { VPSet input = {
+                                              {string object = "ElectronicsMap"
+                                               FileInPath file = "CondFormats/HcalObjects/data/hbho_ring12_tb04.txt"
+                                              }
+                }
+        }
 
 }
