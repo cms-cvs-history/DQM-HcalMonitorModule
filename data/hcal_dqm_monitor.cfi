@@ -1,0 +1,123 @@
+
+module hcalMonitor = HcalMonitorModule{
+
+	untracked bool DaqMonitorBEInterface = true
+	untracked bool MonitorDaemon = true
+
+	#Are you running online or offline??
+	untracked bool OffLine = true
+
+	# set this flag true to disable writing a ROOT output file
+	untracked bool disableROOToutput = false
+		
+	#Must list first FED and list of FEDs to be read out, same as for unpacker
+	int32 HcalFirstFED = 700
+	vint32 FEDs = { 719, 721, 723 }
+
+
+	#Flags for DataFormatMonitor
+	untracked bool DataFormatMonitor = true
+
+	#Flags for DigiMonitor.  Threshold is in ADC counts
+	untracked bool DigiMonitor = true
+	untracked bool DigisPerChannel = false
+	untracked int32 DigiOccThresh = 0
+
+
+	#Flags for RecHitMonitor.  Threshold is in GeV
+	untracked bool RecHitMonitor = false
+	untracked bool RecHitsPerChannel = false
+	untracked double RecHitOccThresh = 2.0  
+
+	#Flags for HotCellMonitor.  Threshold is in GeV
+	untracked bool HotCellMonitor = false
+	untracked double HotCellThresh0 = 10.0
+	untracked double HotCellThresh1 = 20.0	       
+
+
+	#Flags for pedestal monitor
+	untracked bool PedestalMonitor = false
+	untracked bool PedestalsPerChannel = false
+
+	#Flags for LED monitor
+	untracked bool LEDMonitor = true
+	untracked bool LEDPerChannel = true
+	untracked double LED_ADC_Thresh = -10
+
+	#Flags for Commissioning monitor	
+	untracked bool CommissioningMonitor = false
+
+	#Flags for the hcal template analysis
+	untracked bool HcalAnalysis = false
+
+	#Flags for MTCCMonitor.  Thresholds are in fC
+	#Dump threshold in fC, ranges in iEta/iPhi.  Dumps to stdout
+	untracked bool MTCCMonitor = false
+	untracked double MTCCOccThresh = 10
+	untracked double DumpThreshold = 500
+	untracked int32 DumpEtaLow = 0
+	untracked int32 DumpEtaHigh = 10
+	untracked int32 DumpPhiLow = 10
+	untracked int32 DumpPhiHigh = 10
+	       
+
+	#Global HCAL DQM parameters.  
+	#Sets range of iEta/iPhi plots
+	untracked double MaxEta = 41.5
+	untracked double MinEta = 28.5	
+	untracked double MaxPhi = 72.5
+	untracked double MinPhi = 0.5	
+
+	#List of known hot cells to veto using DetId
+	untracked vstring HotCells = {}
+}
+
+module  hcalDigis = HcalRawToDigi {
+	/// At most ten samples can be put into a digi, if there are more
+	/// than ten, firstSample and lastSample select which samples
+	/// will be copied to the digi
+	int32 firstSample = 0
+	int32 lastSample = 9
+	/// Flag to enable unpacking of calibration channels (default = false)
+	untracked bool UnpackCalib = false
+	/// Optional filter to remove any digi with "data valid" off, "error" on, 
+	/// or capids not rotating
+	bool FilterDataQuality = true
+	/// Use the defaults for FED numbers
+	/// Do not complain about missing FEDs
+	untracked bool ComplainEmptyData = false
+	/// Do not complain about missing FEDs
+	untracked bool ExceptionEmptyData = false
+
+	InputTag InputLabel = source
+}
+
+module recohbhe = HcalSimpleReconstructor {
+        int32 firstSample = 1
+        int32 samplesToAdd = 8
+        string Subdetector = 'HBHE'
+	InputTag digiLabel = hcalDigis
+        bool correctForTimeslew = true
+	bool correctForPhaseContainment = true
+	double correctionPhaseNS = 10
+}
+
+module recoho = HcalSimpleReconstructor {
+        int32 firstSample = 1
+        int32 samplesToAdd = 8
+        string Subdetector = 'HO'
+	InputTag digiLabel = hcalDigis
+        bool correctForTimeslew = false
+	bool correctForPhaseContainment = false
+	double correctionPhaseNS = 0
+}	
+
+module recohf = HcalSimpleReconstructor {
+        int32 firstSample = 1
+        int32 samplesToAdd = 8
+        string Subdetector = 'HF'
+	InputTag digiLabel = hcalDigis
+        bool correctForTimeslew = false
+	bool correctForPhaseContainment = false
+	double correctionPhaseNS = 0
+}
