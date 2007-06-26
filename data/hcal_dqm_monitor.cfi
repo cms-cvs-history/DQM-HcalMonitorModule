@@ -5,7 +5,7 @@ module hcalMonitor = HcalMonitorModule{
 	untracked bool MonitorDaemon = true
 
 	#Are you running online or offline??
-	untracked bool OffLine = true
+	untracked bool OffLine = false
 
 	# set this flag true to disable writing a ROOT output file
 	untracked bool disableROOToutput = false
