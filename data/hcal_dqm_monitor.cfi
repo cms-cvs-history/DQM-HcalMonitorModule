@@ -41,7 +41,7 @@ module hcalMonitor = HcalMonitorModule{
 
 	#Flags for LED monitor
 	untracked bool LEDMonitor = true
-	untracked bool LEDPerChannel = true
+	untracked bool LEDPerChannel = false
 	untracked double LED_ADC_Thresh = -10
 
 	#Flags for Commissioning monitor	
