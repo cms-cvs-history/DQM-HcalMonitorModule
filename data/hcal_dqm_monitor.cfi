@@ -12,7 +12,7 @@ module hcalMonitor = HcalMonitorModule{
 		
 	#Must list first FED and list of FEDs to be read out, same as for unpacker
 	int32 HcalFirstFED = 700
-	vint32 FEDs = { 719, 721, 723 }
+	vint32 FEDs = { 700,701,702,703,704,705,706,707,708,709,710,711,712,713,714,715,716,717,719,721,723 }
 
 
 	#Flags for DataFormatMonitor
@@ -20,7 +20,7 @@ module hcalMonitor = HcalMonitorModule{
 
 	#Flags for DigiMonitor.  Threshold is in ADC counts
 	untracked bool DigiMonitor = true
-	untracked bool DigisPerChannel = false
+	untracked bool DigisPerChannel = true
 	untracked int32 DigiOccThresh = 0
 
 
@@ -64,7 +64,7 @@ module hcalMonitor = HcalMonitorModule{
 	#Global HCAL DQM parameters.  
 	#Sets range of iEta/iPhi plots
 	untracked double MaxEta = 41.5
-	untracked double MinEta = 28.5	
+	untracked double MinEta = 11.5	
 	untracked double MaxPhi = 72.5
 	untracked double MinPhi = 0.5	
 
