@@ -1,0 +1,106 @@
+	module hcalMonitor = HcalMonitorModule{
+	       untracked bool DaqMonitorBEInterface = true
+	       untracked bool MonitorDaemon = true
+
+	      # set this flag true to disable writing a ROOT output file
+	       untracked bool disableROOToutput = false
+		
+		#Must list first FED and list of FEDs to be read out, same as for unpacker
+	       int32 HcalFirstFED = 700
+               vint32 FEDs = { 706, 707, 708, 709, 710, 711 }
+
+		#Are you running online or offline??
+	       untracked bool OffLine = false
+
+		#Flags for HotCellMonitor.  Threshold is in GeV
+	       untracked bool HotCellMonitor = false
+	       untracked double HotCellThresh0 = 1.0
+	       untracked double HotCellThresh1 = 15.0
+
+		#Flags for RecHitMonitor.  Threshold is in GeV
+	       untracked bool RecHitMonitor = false
+	       untracked bool RecHitsPerChannel = false
+	       untracked double RecHitOccThresh = 2.0  
+	       
+		#Flags for DigiMonitor.  Threshold is in ADC counts
+		untracked bool DigiMonitor = true
+		untracked bool DigisPerChannel = false
+		untracked int32 DigiOccThresh = 0
+
+		#Flags for DataFormatMonitor
+		untracked bool DataFormatMonitor = true
+
+		#Flags for MTCCMonitor.  Thresholds are in fC
+		#Dump threshold in fC, ranges in iEta/iPhi.  Dumps to stdout
+		untracked bool MTCCMonitor = false
+		untracked double MTCCOccThresh = 10
+		untracked double DumpThreshold = 500
+		untracked int32 DumpEtaLow = 0
+		untracked int32 DumpEtaHigh = 10
+		untracked int32 DumpPhiLow = 10
+		untracked int32 DumpPhiHigh = 10
+	       
+		#Flags for pedestal monitor
+	       untracked bool PedestalMonitor = false
+	       untracked bool PedestalsPerChannel = false
+
+		#Flags for LED monitor
+	       untracked bool LEDMonitor = false
+	       untracked bool LEDPerChannel = true
+	
+		#Flags for Commissioning monitor	
+		untracked bool CommissioningMonitor = false
+
+		#Flags for the hcal template analysis
+		untracked bool HcalAnalysis = false
+
+		#Global HCAL DQM parameters.  
+		#Sets range of iEta/iPhi plots
+		untracked double MaxEta = 41	
+		untracked double MinEta = 29	
+		untracked double MaxPhi = 73	
+		untracked double MinPhi = 0	
+
+		#List of known hot cells to veto using DetId
+		untracked vstring HotCells = {}
+        }
+
+
+     	module hcalunpacker = HcalRawToDigi {
+                int32 firstSample = 0
+                int32 lastSample = 9
+                untracked int32 HcalFirstFED = 700
+                untracked vint32 FEDs = { 706, 707, 708, 709,710,711 }
+		bool FilterDataQuality = true
+		untracked bool UnpackCalib = false
+                 InputTag InputLabel = source	
+	}
+	module recohbhe = HcalSimpleReconstructor {
+	        int32 firstSample = 1
+	        int32 samplesToAdd = 8
+	        string Subdetector = 'HBHE'
+		InputTag digiLabel = hcalunpacker
+	        bool correctForTimeslew = true
+		bool correctForPhaseContainment = true
+		double correctionPhaseNS = 10
+	}
+
+	module recoho = HcalSimpleReconstructor {
+	        int32 firstSample = 1
+	        int32 samplesToAdd = 8
+	        string Subdetector = 'HO'
+		InputTag digiLabel = hcalunpacker
+	        bool correctForTimeslew = false
+		bool correctForPhaseContainment = false
+		double correctionPhaseNS = 0
+	}	
+
+	module recohf = HcalSimpleReconstructor {
+	        int32 firstSample = 1
+	        int32 samplesToAdd = 8
+	        string Subdetector = 'HF'
+		InputTag digiLabel = hcalunpacker
+	        bool correctForTimeslew = false
+		bool correctForPhaseContainment = false
+		double correctionPhaseNS = 0
+	}
