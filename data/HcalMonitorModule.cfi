@@ -1,7 +1,7 @@
 	module hcalMonitor = HcalMonitorModule{
 	       untracked bool DaqMonitorBEInterface = true
 	       untracked bool MonitorDaemon = true
-	       untracked bool verbose = true
+	       untracked bool verbose = false
 
 	       # set this flag true to disable writing a ROOT output file
 	       untracked bool disableROOToutput = false
@@ -15,29 +15,29 @@
                InputTag hoRecHitLabel = horeco
 
 		#Flags for HotCellMonitor.  Threshold is in GeV
-	        untracked bool HotCellMonitor = true
+	        untracked bool HotCellMonitor = false
 	        untracked double HotCellThresh0 = 1.0
 	        untracked double HotCellThresh1 = 15.0
 	
 		#Flags for TrigPrimMonitor.
-	        untracked bool TrigPrimMonitor = true
+	        untracked bool TrigPrimMonitor = false
 
 		#Flags for RecHitMonitor.  Threshold is in GeV
 	        untracked bool RecHitMonitor = true
-	        untracked bool RecHitsPerChannel = false
+	        untracked bool RecHitsPerChannel = true
 	        untracked double RecHitOccThresh = 2.0  
 	       
 		#Flags for DigiMonitor.  Threshold is in ADC counts
-		untracked bool DigiMonitor = true
+		untracked bool DigiMonitor = false
 		untracked bool DigisPerChannel = false
 		untracked int32 DigiOccThresh = 0
 
 		#Flags for DataFormatMonitor
-		untracked bool DataFormatMonitor = true
+		untracked bool DataFormatMonitor = false
 
 		#Flags for MTCCMonitor.  Thresholds are in fC
 		#Dump threshold in fC, ranges in iEta/iPhi.  Dumps to stdout
-		untracked bool MTCCMonitor = true
+		untracked bool MTCCMonitor = false
 		untracked double MTCCOccThresh = 10
 		untracked double DumpThreshold = 500
 		untracked int32 DumpEtaLow = 0
@@ -47,10 +47,10 @@
 	       
 		#Flags for pedestal monitor
 	        untracked bool PedestalMonitor = true
-	        untracked bool PedestalsPerChannel = false
+	        untracked bool PedestalsPerChannel = true
 
 		#Flags for LED monitor
-	        untracked bool LEDMonitor = true
+	        untracked bool LEDMonitor = false
 	        untracked bool LEDPerChannel = false
 	
 		#Flags for Commissioning monitor	
@@ -62,7 +62,7 @@
 		#Global HCAL DQM parameters.  
 		#Sets range of iEta/iPhi plots
 		untracked double MaxEta = 41	
-		untracked double MinEta = 0	
+		untracked double MinEta = -41	
 		untracked double MaxPhi = 73	
 		untracked double MinPhi = 0	
 
