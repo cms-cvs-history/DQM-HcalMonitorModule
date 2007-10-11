@@ -1,21 +1,19 @@
+
 	module hcalMonitor = HcalMonitorModule{
-	       untracked bool DaqMonitorBEInterface = true
 	       untracked bool MonitorDaemon = true
-	       untracked bool verbose = false
+	       untracked bool debug = false
 
 	       # set this flag true to disable writing a ROOT output file
-	       untracked bool disableROOToutput = false
-		
-		#Are you running online or offline??
-	       untracked bool OffLine = false
- 
+	       untracked bool disableROOToutput = true
+		untracked string monitorName = "Hcal"
+                                 
                InputTag digiLabel = hcalDigis
                InputTag hbheRecHitLabel = hbhereco
                InputTag hfRecHitLabel = hfreco
                InputTag hoRecHitLabel = horeco
 
 		#Flags for HotCellMonitor.  Threshold is in GeV
-	        untracked bool HotCellMonitor = false
+	        untracked bool HotCellMonitor = true
 	        untracked double HotCellThresh0 = 1.0
 	        untracked double HotCellThresh1 = 15.0
 	
@@ -28,12 +26,12 @@
 	        untracked double RecHitOccThresh = 2.0  
 	       
 		#Flags for DigiMonitor.  Threshold is in ADC counts
-		untracked bool DigiMonitor = false
-		untracked bool DigisPerChannel = false
+		untracked bool DigiMonitor = true
+		untracked bool DigisPerChannel = true
 		untracked int32 DigiOccThresh = 0
 
 		#Flags for DataFormatMonitor
-		untracked bool DataFormatMonitor = false
+		untracked bool DataFormatMonitor = true
 
 		#Flags for MTCCMonitor.  Thresholds are in fC
 		#Dump threshold in fC, ranges in iEta/iPhi.  Dumps to stdout
@@ -50,8 +48,8 @@
 	        untracked bool PedestalsPerChannel = true
 
 		#Flags for LED monitor
-	        untracked bool LEDMonitor = false
-	        untracked bool LEDPerChannel = false
+	        untracked bool LEDMonitor = true
+	        untracked bool LEDPerChannel = true
 	
 		#Flags for Commissioning monitor	
 		untracked bool CommissioningMonitor = false
