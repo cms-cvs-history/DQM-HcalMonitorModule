@@ -1,12 +1,30 @@
-
 	module hcalMonitor = HcalMonitorModule{
-	       untracked bool MonitorDaemon = true
-	       untracked bool debug = false
 
-	       # set this flag true to disable writing a ROOT output file
-	       untracked bool disableROOToutput = true
+		#Determines connection to back-end daemon
+		untracked bool MonitorDaemon = true
+	       	
+		# Verbosity Switch
+		untracked bool debug = false
+
+		# set this flag true to disable writing a ROOT output file
+		untracked bool disableROOToutput = true
+
+		# Base name for monitor folders and output file		
 		untracked string monitorName = "Hcal"
-                                 
+
+		# Choices for prescaling your module (-1 mean no prescale)
+		# Operate every N events
+		untracked int32 diagnosticPrescaleEvt = -1
+		# Operate every N lumi sections
+		untracked int32 diagnosticPrescaleLS  = -1
+		# Operate every N minutes
+		untracked int32 diagnosticPrescaleTime = -1
+		# Operate every N updates
+		untracked int32 diagnosticPrescaleUpdate = -1
+
+
+
+		# Labels for input products
                InputTag digiLabel = hcalDigis
                InputTag hbheRecHitLabel = hbhereco
                InputTag hfRecHitLabel = hfreco
