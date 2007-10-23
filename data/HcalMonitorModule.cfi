@@ -31,7 +31,7 @@
                InputTag hoRecHitLabel = horeco
 
 		#Flags for HotCellMonitor.  Threshold is in GeV
-	        untracked bool HotCellMonitor = true
+	        untracked bool HotCellMonitor = false
 	        untracked double HotCellThresh0 = 1.0
 	        untracked double HotCellThresh1 = 15.0
 	
@@ -64,6 +64,7 @@
 		#Flags for pedestal monitor
 	        untracked bool PedestalMonitor = true
 	        untracked bool PedestalsPerChannel = true
+		untracked bool PedestalsInFC = true
 
 		#Flags for LED monitor
 	        untracked bool LEDMonitor = true
