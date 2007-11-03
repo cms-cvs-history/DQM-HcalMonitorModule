@@ -7,7 +7,7 @@
 		untracked bool debug = false
 
 		# set this flag true to disable writing a ROOT output file
-		untracked bool disableROOToutput = true
+		untracked bool disableROOToutput = false
 
 		# Base name for monitor folders and output file		
 		untracked string monitorName = "Hcal"
@@ -23,23 +23,32 @@
 		untracked int32 diagnosticPrescaleUpdate = -1
 
 
-
 		# Labels for input products
-               InputTag digiLabel = hcalDigis
-               InputTag hbheRecHitLabel = hbhereco
-               InputTag hfRecHitLabel = hfreco
-               InputTag hoRecHitLabel = horeco
+                InputTag digiLabel = hcalDigis
+                InputTag hbheRecHitLabel = hbhereco
+                InputTag hfRecHitLabel = hfreco
+                InputTag hoRecHitLabel = horeco
 
 		#Flags for HotCellMonitor.  Threshold is in GeV
-	        untracked bool HotCellMonitor = true
-	        untracked double HotCellThresh0 = 1.0
-	        untracked double HotCellThresh1 = 15.0
-	
+
+                untracked bool HotCellMonitor = true
+                untracked vdouble thresholds={1,1.5,2.,5,15}
+
+                untracked double NADA_Ecand_cut = 1.0
+                untracked double NADA_Ecube_cut = 0.1
+                untracked double NADA_Ecell_cut = 0.1
+                untracked double NADA_NegCand_cut = -1.5
+
+                #Flags for DeadCellMonitor
+                untracked bool DeadCellMonitor = true
+                untracked double coolcellfrac = 0.1
+                untracked int32 checkNevents = 100
+
 		#Flags for TrigPrimMonitor.
 	        untracked bool TrigPrimMonitor = false
 
 		#Flags for RecHitMonitor.  Threshold is in GeV
-	        untracked bool RecHitMonitor = true
+	        untracked bool RecHitMonitor = false
 	        untracked bool RecHitsPerChannel = true
 	        untracked double RecHitOccThresh = 2.0  
 	       
@@ -49,7 +58,7 @@
 		untracked int32 DigiOccThresh = 0
 
 		#Flags for DataFormatMonitor
-		untracked bool DataFormatMonitor = true
+		untracked bool DataFormatMonitor = false
 
 		#Flags for MTCCMonitor.  Thresholds are in fC
 		#Dump threshold in fC, ranges in iEta/iPhi.  Dumps to stdout
@@ -62,12 +71,12 @@
 		untracked int32 DumpPhiHigh = 10
 	       
 		#Flags for pedestal monitor
-	        untracked bool PedestalMonitor = true
+	        untracked bool PedestalMonitor = false
 	        untracked bool PedestalsPerChannel = true
 		untracked bool PedestalsInFC = true
 
 		#Flags for LED monitor
-	        untracked bool LEDMonitor = true
+	        untracked bool LEDMonitor = false
 	        untracked bool LEDPerChannel = true
 	
 		#Flags for Commissioning monitor	
