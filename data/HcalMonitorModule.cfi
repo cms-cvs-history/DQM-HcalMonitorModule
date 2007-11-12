@@ -58,7 +58,8 @@
 		untracked int32 DigiOccThresh = 0
 
 		#Flags for DataFormatMonitor
-		untracked bool DataFormatMonitor = false
+		untracked bool DataFormatMonitor = true
+		untracked int32 dfPrtLvl = 0
 
 		#Flags for MTCCMonitor.  Thresholds are in fC
 		#Dump threshold in fC, ranges in iEta/iPhi.  Dumps to stdout
