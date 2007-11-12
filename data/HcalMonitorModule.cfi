@@ -48,7 +48,7 @@
 	        untracked bool TrigPrimMonitor = false
 
 		#Flags for RecHitMonitor.  Threshold is in GeV
-	        untracked bool RecHitMonitor = false
+	        untracked bool RecHitMonitor = true
 	        untracked bool RecHitsPerChannel = true
 	        untracked double RecHitOccThresh = 2.0  
 	       
@@ -72,12 +72,12 @@
 		untracked int32 DumpPhiHigh = 10
 	       
 		#Flags for pedestal monitor
-	        untracked bool PedestalMonitor = false
+	        untracked bool PedestalMonitor = true
 	        untracked bool PedestalsPerChannel = true
 		untracked bool PedestalsInFC = true
 
 		#Flags for LED monitor
-	        untracked bool LEDMonitor = false
+	        untracked bool LEDMonitor = true
 	        untracked bool LEDPerChannel = true
 	
 		#Flags for Commissioning monitor	
