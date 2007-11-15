@@ -4,13 +4,7 @@
 		untracked bool MonitorDaemon = true
 	       	
 		# Verbosity Switch
-		untracked bool debug = false
-
-		# set this flag true to disable writing a ROOT output file
-		untracked bool disableROOToutput = false
-
-		# Base name for monitor folders and output file		
-		untracked string monitorName = "Hcal"
+		untracked bool debug = true
 
 		# Choices for prescaling your module (-1 mean no prescale)
 		# Operate every N events
@@ -44,9 +38,6 @@
                 untracked double coolcellfrac = 0.1
                 untracked int32 checkNevents = 100
 
-		#Flags for TrigPrimMonitor.
-	        untracked bool TrigPrimMonitor = false
-
 		#Flags for RecHitMonitor.  Threshold is in GeV
 	        untracked bool RecHitMonitor = true
 	        untracked bool RecHitsPerChannel = true
@@ -63,7 +54,7 @@
 
 		#Flags for MTCCMonitor.  Thresholds are in fC
 		#Dump threshold in fC, ranges in iEta/iPhi.  Dumps to stdout
-		untracked bool MTCCMonitor = false
+		untracked bool MTCCMonitor = true
 		untracked double MTCCOccThresh = 10
 		untracked double DumpThreshold = 500
 		untracked int32 DumpEtaLow = 0
@@ -80,9 +71,6 @@
 	        untracked bool LEDMonitor = true
 	        untracked bool LEDPerChannel = true
 	
-		#Flags for Commissioning monitor	
-		untracked bool CommissioningMonitor = false
-
 		#Flags for the hcal template analysis
 		untracked bool HcalAnalysis = false
 
