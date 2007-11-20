@@ -4,7 +4,7 @@
 		untracked bool MonitorDaemon = true
 	       	
 		# Verbosity Switch
-		untracked bool debug = true
+		untracked bool debug = false
 
 		# Choices for prescaling your module (-1 mean no prescale)
 		# Operate every N events
