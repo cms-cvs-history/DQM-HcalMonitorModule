@@ -22,6 +22,7 @@
                 InputTag hbheRecHitLabel = hbhereco
                 InputTag hfRecHitLabel = hfreco
                 InputTag hoRecHitLabel = horeco
+  	        InputTag gtLabel = l1GtUnpack
 
 		#Flags for HotCellMonitor.  Threshols are in GeV
 
@@ -53,12 +54,12 @@
 
 		#Flags for RecHitMonitor.  Threshold is in GeV
 	        untracked bool RecHitMonitor = true
-	        untracked bool RecHitsPerChannel = true
+	        untracked bool RecHitsPerChannel = false
 	        untracked double RecHitOccThresh = 2.0  
 	       
 		#Flags for DigiMonitor.  Threshold is in ADC counts
 		untracked bool DigiMonitor = true
-		untracked bool DigisPerChannel = true
+		untracked bool DigisPerChannel = false
 		untracked int32 DigiOccThresh = 0
 
 		#Flags for DataFormatMonitor
@@ -67,7 +68,7 @@
 
 		#Flags for MTCCMonitor.  Thresholds are in fC
 		#Dump threshold in fC, ranges in iEta/iPhi.  Dumps to stdout
-		untracked bool MTCCMonitor = true
+		untracked bool MTCCMonitor = false
 		untracked double MTCCOccThresh = 10
 		untracked double DumpThreshold = 500
 		untracked int32 DumpEtaLow = 0
