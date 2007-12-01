@@ -26,7 +26,7 @@
 
 		#Flags for HotCellMonitor.  Threshols are in GeV
 
-                untracked bool HotCellMonitor = false
+                untracked bool HotCellMonitor = true
                 untracked vdouble thresholds={1,1.5,2.,5,15}
     
                 untracked bool checkHB=1
@@ -48,12 +48,12 @@
                 
    
                 #Flags for DeadCellMonitor
-                untracked bool DeadCellMonitor = false
+                untracked bool DeadCellMonitor = true
                 untracked double coolcellfrac = 0.1
                 untracked int32 checkNevents = 100
 
 		#Flags for RecHitMonitor.  Threshold is in GeV
-	        untracked bool RecHitMonitor = false
+	        untracked bool RecHitMonitor = true
 	        untracked bool RecHitsPerChannel = false
 	        untracked double RecHitOccThresh = 2.0  
 	       
@@ -77,16 +77,16 @@
 		untracked int32 DumpPhiHigh = 10
 	       
 		#Flags for pedestal monitor
-	        untracked bool PedestalMonitor = false
-	        untracked bool PedestalsPerChannel = false
-		untracked bool PedestalsInFC = false
+	        untracked bool PedestalMonitor = true
+	        untracked bool PedestalsPerChannel = true
+		untracked bool PedestalsInFC = true
 
 		#Flags for LED monitor
-	        untracked bool LEDMonitor = false
-	        untracked bool LEDPerChannel = false
+	        untracked bool LEDMonitor = true
+	        untracked bool LEDPerChannel = true
 
 		#Flags for TPG monitor
-		untracked bool TrigPrimMonitor = true
+		untracked bool TrigPrimMonitor = false
 
 		#Flags for the hcal template analysis
 		untracked bool HcalAnalysis = false
