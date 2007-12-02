@@ -86,7 +86,7 @@
 	        untracked bool LEDPerChannel = true
 
 		#Flags for TPG monitor
-		untracked bool TrigPrimMonitor = false
+		untracked bool TrigPrimMonitor = true
 
 		#Flags for the hcal template analysis
 		untracked bool HcalAnalysis = false
