@@ -1,0 +1,162 @@
+	module hcalMonitor = HcalMonitorModule{
+
+		#Determines connection to back-end daemon
+		untracked bool MonitorDaemon = true
+	       	
+		# Verbosity Switch
+		untracked bool debug = false
+
+		# Choices for prescaling your module (-1 mean no prescale)
+		# Operate every N events
+		untracked int32 diagnosticPrescaleEvt = -1
+		# Operate every N lumi sections
+		untracked int32 diagnosticPrescaleLS  = -1
+		# Operate every N minutes
+		untracked int32 diagnosticPrescaleTime = -1
+		# Operate every N updates
+		untracked int32 diagnosticPrescaleUpdate = -1
+
+
+		# Labels for input products
+                InputTag digiLabel = hcalDigis
+                InputTag hbheRecHitLabel = hbhereco
+                InputTag hfRecHitLabel = hfreco
+                InputTag hoRecHitLabel = horeco
+  	        InputTag gtLabel = l1GtUnpack
+
+		#Flags for HotCellMonitor.  Threshols are in GeV
+
+                untracked bool HotCellMonitor = false
+                untracked vdouble thresholds={1,1.5,2.,5,15}
+    
+                untracked bool checkHB=1
+                untracked bool checkHE=1
+                untracked bool checkHO=1
+                untracked bool checkHF=1
+
+                untracked double NADA_Ecand_cut0 = 1.
+                untracked double NADA_Ecand_cut1 = 5.
+                untracked double NADA_Ecand_cut2 = 500.
+                untracked double NADA_Ecube_cut = 0.1
+                untracked double NADA_Ecell_cut = 0.1
+                untracked double NADA_Ecube_frac=0.02
+                untracked double NADA_Ecell_frac=0.02
+                untracked int32 NADA_maxdepth=1
+                untracked int32 NADA_maxeta=1
+                untracked int32 NADA_maxphi=1
+                untracked double NADA_NegCand_cut = -1.5
+                
+   
+                #Flags for DeadCellMonitor
+                untracked bool DeadCellMonitor = false
+                untracked double coolcellfrac = 0.1
+                untracked int32 checkNevents = 100
+
+		#Flags for RecHitMonitor.  Threshold is in GeV
+	        untracked bool RecHitMonitor = false
+	        untracked bool RecHitsPerChannel = false
+	        untracked double RecHitOccThresh = 2.0  
+	       
+		#Flags for DigiMonitor.  Threshold is in ADC counts
+		untracked bool DigiMonitor = true
+		untracked bool DigisPerChannel = false
+		untracked int32 DigiOccThresh = 0
+
+		#Flags for DataFormatMonitor
+		untracked bool DataFormatMonitor = true
+		untracked int32 dfPrtLvl = 0
+
+		#Flags for MTCCMonitor.  Thresholds are in fC
+		#Dump threshold in fC, ranges in iEta/iPhi.  Dumps to stdout
+		untracked bool MTCCMonitor = false
+		untracked double MTCCOccThresh = 10
+		untracked double DumpThreshold = 500
+		untracked int32 DumpEtaLow = 0
+		untracked int32 DumpEtaHigh = 10
+		untracked int32 DumpPhiLow = 10
+		untracked int32 DumpPhiHigh = 10
+	       
+		#Flags for pedestal monitor
+	        untracked bool PedestalMonitor = false
+	        untracked bool PedestalsPerChannel = false
+		untracked bool PedestalsInFC = true
+
+		#Flags for LED monitor
+	        untracked bool LEDMonitor = false
+	        untracked bool LEDPerChannel = true
+
+		#Flags for TPG monitor
+		untracked bool TrigPrimMonitor = true
+
+		#Flags for the hcal template analysis
+		untracked bool HcalAnalysis = false
+
+		#Global HCAL DQM parameters.  
+		#Sets range of iEta/iPhi plots
+		untracked double MaxEta = 41	
+		untracked double MinEta = -41	
+		untracked double MaxPhi = 73	
+		untracked double MinPhi = 0	
+
+		#List of known hot cells to veto using DetId
+		untracked vstring HotCells = {}
+
+
+                # HotCell Tags for individual subdetectors
+                # If these aren't specified, then the global 
+                # values are used
+                untracked vdouble HBthresholds={1,1.5,2.,5,15}
+                untracked vdouble HEthresholds={1,1.5,2.,5,15}
+                untracked vdouble HOthresholds={1,1.5,2.,5,15}
+                untracked vdouble HFthresholds={1,1.5,2.,5,15}
+
+                untracked double HB_NADA_Ecand_cut0 = 1.
+                untracked double HB_NADA_Ecand_cut1 = 5.
+                untracked double HB_NADA_Ecand_cut2 = 500.
+                untracked double HB_NADA_Ecube_cut = 0.1
+                untracked double HB_NADA_Ecell_cut = 0.1
+                untracked double HB_NADA_Ecube_frac=0.02
+                untracked double HB_NADA_Ecell_frac=0.02
+                untracked int32 HB_NADA_maxdepth=1
+                untracked int32 HB_NADA_maxeta=1
+                untracked int32 HB_NADA_maxphi=1
+                untracked double HB_NADA_NegCand_cut = -1.5
+                
+                untracked double HE_NADA_Ecand_cut0 = 1.
+                untracked double HE_NADA_Ecand_cut1 = 5.
+                untracked double HE_NADA_Ecand_cut2 = 500.
+                untracked double HE_NADA_Ecube_cut = 0.1
+                untracked double HE_NADA_Ecell_cut = 0.1
+                untracked double HE_NADA_Ecube_frac=0.02
+                untracked double HE_NADA_Ecell_frac=0.02
+                untracked int32 HE_NADA_maxdepth=1
+                untracked int32 HE_NADA_maxeta=1
+                untracked int32 HE_NADA_maxphi=1
+                untracked double HE_NADA_NegCand_cut = -1.5
+                
+                untracked double HO_NADA_Ecand_cut0 = 1.
+                untracked double HO_NADA_Ecand_cut1 = 5.
+                untracked double HO_NADA_Ecand_cut2 = 500.
+                untracked double HO_NADA_Ecube_cut = 0.1
+                untracked double HO_NADA_Ecell_cut = 0.1
+                untracked double HO_NADA_Ecube_frac=0.02
+                untracked double HO_NADA_Ecell_frac=0.02
+                untracked int32 HO_NADA_maxdepth=1
+                untracked int32 HO_NADA_maxeta=1
+                untracked int32 HO_NADA_maxphi=1
+                untracked double HO_NADA_NegCand_cut = -1.5
+                
+                untracked double HF_NADA_Ecand_cut0 = 1.
+                untracked double HF_NADA_Ecand_cut1 = 5.
+                untracked double HF_NADA_Ecand_cut2 = 500.
+                untracked double HF_NADA_Ecube_cut = 0.1
+                untracked double HF_NADA_Ecell_cut = 0.1
+                untracked double HF_NADA_Ecube_frac=0.02
+                untracked double HF_NADA_Ecell_frac=0.02
+                untracked int32 HF_NADA_maxdepth=1
+                untracked int32 HF_NADA_maxeta=1
+                untracked int32 HF_NADA_maxphi=1
+                untracked double HF_NADA_NegCand_cut = -1.5
+                
+
+        }
