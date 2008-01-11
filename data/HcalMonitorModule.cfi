@@ -100,23 +100,24 @@
 		#List of known hot cells to veto using DetId
 		untracked vstring HotCells = {}
 
+                untracked bool checkHB=true
+                untracked bool checkHE=true
+                untracked bool checkHO=true
+                untracked bool checkHF=true
 
                 # HotCell Tags for individual subdetectors
                 # If these aren't specified, then the global 
                 # values are used
-                #untracked vdouble HBthresholds={1,1.5,2.,5,15}
-                #untracked vdouble HEthresholds={1,1.5,2.,5,15}
-                #untracked vdouble HOthresholds={1,1.5,2.,5,15}
-                #untracked vdouble HFthresholds={1,1.5,2.,5,15}
 
-                #untracked bool checkHB=true
-                #untracked bool checkHE=true
-                #untracked bool checkHO=true
-                #untracked bool checkHF=true
                 #untracked bool HBdebug = false
                 #untracked bool HEdebug = false
                 #untracked bool HOdebug = false
                 #untracked bool HFdebug = false
+
+                #untracked vdouble HBthresholds={1,1.5,2.,5,15}
+                #untracked vdouble HEthresholds={1,1.5,2.,5,15}
+                #untracked vdouble HOthresholds={1,1.5,2.,5,15}
+                #untracked vdouble HFthresholds={1,1.5,2.,5,15}
 
                 #untracked double HBMaxEta = 41	
  		#untracked double HBMinEta = -41	
