@@ -29,12 +29,13 @@
                 untracked bool HotCellMonitor = true
                 untracked vdouble thresholds={1,1.5,2.,5,15}
 
-                untracked double NADA_Ecand_cut0 = 1.
-                untracked double NADA_Ecand_cut1 = 5.
+                // NADA params updated for Jan DQM challenge using GREN data
+                untracked double NADA_Ecand_cut0 = 1.5 // orig values was 1.0
+                untracked double NADA_Ecand_cut1 = 2.5 // orig value was 2.5
                 untracked double NADA_Ecand_cut2 = 500.
-                untracked double NADA_Ecube_cut = 0.1
+                untracked double NADA_Ecube_cut = 0.5 // orig value was 0.1
                 untracked double NADA_Ecell_cut = 0.1
-                untracked double NADA_Ecube_frac=0.02
+                untracked double NADA_Ecube_frac=0.30 // orig vale was 0.02
                 untracked double NADA_Ecell_frac=0.02
                 untracked int32 NADA_maxdepth=0
                 untracked int32 NADA_maxeta=1
@@ -44,12 +45,12 @@
    
                 #Flags for DeadCellMonitor
                 untracked bool DeadCellMonitor = true
-                untracked double coolcellfrac = 0.5
-                untracked int32 checkNevents = 100
-                untracked double ped_Nsigma = 2
+                untracked double coolcellfrac = 0.5 // fraction of cell's neighbors that must be significantly hotter than the cell for the cell to be considered "cool"
+                untracked int32 checkNevents = 25 
+                untracked double ped_Nsigma = 0
                 untracked double minADCcount = 0
-                untracked double deadcellfloor = -10.
-                untracked double deadcellmindiff = 1.
+                untracked double deadcellfloor = -10. // cells below this energy are automatically set as "cool"
+                untracked double deadcellmindiff = 1. // cell must be at least this much below neighbors to be considered a cool cell candidate 
 
 		#Flags for RecHitMonitor.  Threshold is in GeV
 	        untracked bool RecHitMonitor = true
