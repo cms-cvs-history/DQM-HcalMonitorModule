@@ -59,7 +59,7 @@
 	       
 		#Flags for DigiMonitor.  Threshold is in ADC counts
 		untracked bool DigiMonitor = true
-		untracked bool DigisPerChannel = false
+		untracked bool DigisPerChannel = true
 		untracked int32 DigiOccThresh = 0
 
 		#Flags for DataFormatMonitor
@@ -79,17 +79,18 @@
 		#Flags for pedestal monitor
 	        untracked bool PedestalMonitor = true
 	        untracked bool PedestalsPerChannel = true
-		untracked bool PedestalsInFC = true
+		untracked bool PedestalsInFC = false
 
 		#Flags for LED monitor
 	        untracked bool LEDMonitor = true
 	        untracked bool LEDPerChannel = true
+		untracked double LED_ADC_Thresh = -1000
 
 		#Flags for TPG monitor
 		untracked bool TrigPrimMonitor = true
 
 		#Flags for the hcal template analysis
-		untracked bool HcalAnalysis = true
+		untracked bool HcalAnalysis = false
 
 		#Global HCAL DQM parameters.  
 		#Sets range of iEta/iPhi plots
