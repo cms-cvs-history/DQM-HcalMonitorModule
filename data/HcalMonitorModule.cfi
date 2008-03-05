@@ -23,7 +23,8 @@
                 InputTag hfRecHitLabel = hfreco
                 InputTag hoRecHitLabel = horeco
   	        InputTag gtLabel = l1GtUnpack
-
+                InputTag caloTowerLabel = towerMaker
+    
 		#Flags for HotCellMonitor.  Thresholds are in GeV
 
                 untracked bool HotCellMonitor = true
@@ -88,6 +89,9 @@
 
 		#Flags for TPG monitor
 		untracked bool TrigPrimMonitor = true
+
+                #Flags for CaloTower Monitor
+                untracked bool CaloTowerMonitor = false
 
 		#Flags for the hcal template analysis
 		untracked bool HcalAnalysis = false

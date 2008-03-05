@@ -23,6 +23,7 @@
                 InputTag hfRecHitLabel = hfreco
                 InputTag hoRecHitLabel = horeco
   	        InputTag gtLabel = l1GtUnpack
+                InputTag caloTowerLabel = towerMaker
 
 
                 untracked bool checkHB=true
@@ -95,6 +96,10 @@
 
 		#Flags for TPG monitor
 		untracked bool TrigPrimMonitor = true
+
+                #Flags for CaloTower Monitor
+                untracked bool CaloTowerMonitor = false
+
 
 		#Flags for the hcal template analysis
 		untracked bool HcalAnalysis = false
