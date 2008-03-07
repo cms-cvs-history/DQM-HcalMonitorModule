@@ -98,10 +98,10 @@
 
 		#Global HCAL DQM parameters.  
 		#Sets range of iEta/iPhi plots
-		untracked double MaxEta = 41	
-		untracked double MinEta = -41	
-		untracked double MaxPhi = 73	
-		untracked double MinPhi = 0	
+		untracked double MaxEta = 42.5	
+		untracked double MinEta = -42.5	
+		untracked double MaxPhi = 73.5	
+		untracked double MinPhi = -0.5	
 
 		#List of known hot cells to veto using DetId
 		untracked vstring HotCells = {}
