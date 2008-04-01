@@ -4,8 +4,8 @@
 /*
  * \file HcalMonitorModule.h
  *
- * $Date: 2007/12/19 19:02:23 $
- * $Revision: 1.24 $
+ * $Date: 2008/03/05 20:48:57 $
+ * $Revision: 1.26 $
  * \author W. Fisher
  *
 */
@@ -42,6 +42,7 @@
 #include "DQM/HcalMonitorTasks/interface/HcalMTCCMonitor.h"
 #include "DQM/HcalMonitorTasks/interface/HcalHotCellMonitor.h"
 #include "DQM/HcalMonitorTasks/interface/HcalDeadCellMonitor.h"
+#include "DQM/HcalMonitorTasks/interface/HcalCaloTowerMonitor.h"
 #include "DQM/HcalMonitorTasks/interface/HcalTrigPrimMonitor.h"
 #include "DQM/HcalMonitorTasks/interface/HcalTemplateAnalysis.h"
 #include "TBDataFormats/HcalTBObjects/interface/HcalTBRunData.h"
@@ -146,6 +147,7 @@ public:
   edm::InputTag inputLabelRecHitHBHE_;
   edm::InputTag inputLabelRecHitHF_;
   edm::InputTag inputLabelRecHitHO_;
+  edm::InputTag inputLabelCaloTower_;
 
   MonitorElement* meFEDS_;
   MonitorElement* meStatus_;
@@ -165,6 +167,7 @@ public:
   HcalMTCCMonitor*        mtccMon_;
   HcalHotCellMonitor*     hotMon_;
   HcalDeadCellMonitor*    deadMon_;
+  HcalCaloTowerMonitor*   ctMon_;
   HcalTrigPrimMonitor*    tpMon_;
   HcalTemplateAnalysis*   tempAnalysis_;
   
