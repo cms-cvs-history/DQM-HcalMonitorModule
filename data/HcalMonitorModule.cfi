@@ -60,7 +60,7 @@
 	       
 		#Flags for DigiMonitor.  Threshold is in ADC counts
 		untracked bool DigiMonitor = true
-		untracked bool DigisPerChannel = true
+		untracked bool DigisPerChannel = false
 		untracked int32 DigiOccThresh = 0
 
 		#Flags for DataFormatMonitor
@@ -79,7 +79,7 @@
 	       
 		#Flags for pedestal monitor
 	        untracked bool PedestalMonitor = true
-	        untracked bool PedestalsPerChannel = true
+	        untracked bool PedestalsPerChannel = false
 		untracked bool PedestalsInFC = true
 
 		#Flags for LED monitor
