@@ -80,7 +80,7 @@
 		#Flags for pedestal monitor
 	        untracked bool PedestalMonitor = true
 	        untracked bool PedestalsPerChannel = true
-		untracked bool PedestalsInFC = false
+		untracked bool PedestalsInFC = true
 
 		#Flags for LED monitor
 	        untracked bool LEDMonitor = true
