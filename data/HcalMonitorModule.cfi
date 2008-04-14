@@ -89,6 +89,11 @@
 
 		#Flags for TPG monitor
 		untracked bool TrigPrimMonitor = true
+		#example values valid for r40093
+		untracked double TPThreshold = 5
+ 		untracked int32 TPdigiTS = 1
+ 		untracked int32 ADCdigiTS = 3
+
 
                 #Flags for CaloTower Monitor
                 untracked bool CaloTowerMonitor = false
