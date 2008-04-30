@@ -21,11 +21,11 @@ es_source hcalConditions = PoolDBESSource {
       { string record = "HcalPedestalWidthsRcd" string tag = "hcal_widths_fC_v3" },         //temporary change just to get this to run.
       { string record = "HcalElectronicsMapRcd" string tag = "official_emap_v5_080208" },
       { string record = "HcalGainsRcd" string tag = "hcal_gains_v2_gren_reprocessing" },       //temporary change just to get this to run.
-      { string record = "HcalQIEDataRcd" string tag = "qie_normalmode_v5" },
+      { string record = "HcalQIEDataRcd" string tag = "qie_normalmode_v5" }
       //{ string record = "HcalRespCorrsRcd" string tag = "hcal_respcorr_trivial_mc" }       //temporary change just to get this to run.
 //      { string record = "HcalZSThresholdsRcd" string tag = "hcal_respcorr_trivial_mc" }        //temporary change just to get this to run.
     }
     untracked bool siteLocalConfig = false
   }
 
-es_source es_hardcode = HcalHardcodeCalibrations {untracked vstring toGet = {"GainWidths", "channelQuality", "ZSThresholds" }}
+es_source es_hardcode = HcalHardcodeCalibrations {untracked vstring toGet = {"GainWidths", "channelQuality", "ZSThresholds" ,"RespCorrs"} }
