@@ -1,0 +1,32 @@
+process HCALDQM = { 
+    include "DQMServices/Core/data/DQM.cfg"
+    replace DQM.collectorHost = "myhost"
+    replace DQM.collectorPort = 9092
+        
+    include "DQM/HcalMonitorModule/data/HcalMonitorModule.cfi"
+    replace hcalMonitor.DataFormatMonitor = true
+    replace hcalMonitor.DigiMonitor       = true
+    replace hcalMonitor.HotCellMonitor    = true
+    replace hcalMonitor.RecHitMonitor     = true
+    replace hcalMonitor.TrigPrimMonitor   = true
+
+    replace hcalMonitor.PedestalMonitor   = false
+    replace hcalMonitor.LEDMonitor        = false
+    replace hcalMonitor.DeadCellMonitor   = false
+    replace hcalMonitor.MTCCMonitor       = false
+    replace hcalMonitor.CaloTowerMonitor  = false
+    replace hcalMonitor.HcalAnalysis      = false
+        
+    include "DQM/HcalMonitorModule/data/Hcal_FrontierConditions.cff"
+    replace hcalConditions.connect  = "frontier://Frontier/CMS_COND_20X_HCAL"
+
+    include "FWCore/MessageLogger/data/MessageLogger.cfi"
+    
+     path p = { hcalMonitor }
+
+    
+    untracked PSet options = {
+	untracked vstring Rethrow = { "ProductNotFound", "TooManyProducts", "TooFewProducts" }
+    }
+
+}
