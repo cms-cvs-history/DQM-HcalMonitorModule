@@ -60,7 +60,7 @@
 	       
 		#Flags for DigiMonitor.  Threshold is in ADC counts
 		untracked bool DigiMonitor = true
-		untracked bool DigisPerChannel = true
+		untracked bool DigisPerChannel = false # set DigisPerChannel off by default -- JT, 08 May 2008
 		untracked int32 DigiOccThresh = 0
 
 		#Flags for DataFormatMonitor
