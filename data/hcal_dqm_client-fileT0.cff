@@ -1,7 +1,3 @@
-process HCALDQM = { 
-    include "DQMServices/Core/data/DQM.cfg"
-    replace DQM.collectorHost = "myhost"
-    replace DQM.collectorPort = 9092
 
     include "DQM/HcalMonitorClient/data/HcalMonitorClient.cfi"
     replace hcalClient.plotPedRAW       = true
@@ -21,13 +17,10 @@ process HCALDQM = {
     
     include "DQM/HcalMonitorModule/data/Hcal_FrontierConditions.cff"
     replace hcalConditions.connect  = "frontier://Frontier/CMS_COND_20X_HCAL"
-  
-    include "FWCore/MessageLogger/data/MessageLogger.cfi"
- 
-     path p = { hcalClient }
-
+   
+    sequence p = { hcalClient }
     
     untracked PSet options = {
 	untracked vstring Rethrow = { "ProductNotFound", "TooManyProducts", "TooFewProducts" }
     }
-}
+

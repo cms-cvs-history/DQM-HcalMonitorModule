@@ -1,7 +1,3 @@
-process HCALDQM = { 
-    include "DQMServices/Core/data/DQM.cfg"
-    replace DQM.collectorHost = "myhost"
-    replace DQM.collectorPort = 9092
         
     include "DQM/HcalMonitorModule/data/HcalMonitorModule.cfi"
     replace hcalMonitor.DataFormatMonitor = true
@@ -22,11 +18,11 @@ process HCALDQM = {
 
     include "FWCore/MessageLogger/data/MessageLogger.cfi"
     
-     path p = { hcalMonitor }
+    sequence p = { hcalMonitor }
 
     
     untracked PSet options = {
 	untracked vstring Rethrow = { "ProductNotFound", "TooManyProducts", "TooFewProducts" }
     }
 
-}
+
