@@ -12,17 +12,7 @@
     replace hcalMonitor.MTCCMonitor       = false
     replace hcalMonitor.CaloTowerMonitor  = false
     replace hcalMonitor.HcalAnalysis      = false
-        
-    include "DQM/HcalMonitorModule/data/Hcal_FrontierConditions.cff"
-    replace hcalConditions.connect  = "frontier://Frontier/CMS_COND_20X_HCAL"
-
-    include "FWCore/MessageLogger/data/MessageLogger.cfi"
     
-    sequence p = { hcalMonitor }
-
-    
-    untracked PSet options = {
-	untracked vstring Rethrow = { "ProductNotFound", "TooManyProducts", "TooFewProducts" }
-    }
+    sequence hcalOfflineDQMSource = { hcalMonitor }
 
 

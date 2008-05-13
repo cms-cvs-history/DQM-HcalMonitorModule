@@ -15,12 +15,5 @@
     replace hcalClient.DeadCellClient   = false
     replace hcalClient.CaloTowerClient  = false
     
-    include "DQM/HcalMonitorModule/data/Hcal_FrontierConditions.cff"
-    replace hcalConditions.connect  = "frontier://Frontier/CMS_COND_20X_HCAL"
-   
-    sequence p = { hcalClient }
-    
-    untracked PSet options = {
-	untracked vstring Rethrow = { "ProductNotFound", "TooManyProducts", "TooFewProducts" }
-    }
+    sequence hcalOfflineDQMClient = { hcalClient }
 
