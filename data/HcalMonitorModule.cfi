@@ -5,6 +5,7 @@
 	       	
 		# Verbosity Switch
 		untracked bool debug = false
+                
 
 		# Choices for prescaling your module (-1 mean no prescale)
 		# Operate every N events
@@ -28,8 +29,10 @@
 		#Flags for HotCellMonitor.  Thresholds are in GeV
 
                 untracked bool HotCellMonitor = true
-                untracked vdouble thresholds={1,1.5,2.,5,15}
-
+                untracked vdouble thresholds={15,5,2,1.5,1}
+                # Make extra diagnostic plots
+                untracked bool MakeHotCellDiagnosticPlots = true
+                
                 // NADA params updated for Jan DQM challenge using GREN data
                 untracked double NADA_Ecand_cut0 = 1.5 // orig values was 1.0
                 untracked double NADA_Ecand_cut1 = 2.5 // orig value was 2.5
