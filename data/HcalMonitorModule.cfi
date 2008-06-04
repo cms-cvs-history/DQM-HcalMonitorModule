@@ -31,7 +31,9 @@
                 untracked bool HotCellMonitor = true
                 untracked vdouble thresholds={15,5,2,1.5,1}
                 # Make extra diagnostic plots
-                untracked bool MakeHotCellDiagnosticPlots = true
+                untracked bool MakeDiagnosticPlots          = true
+                untracked bool MakeDeadCellDiagnosticPlots  = true
+                untracked bool MakeHotCellDiagnosticPlots   = true
                 
                 // NADA params updated for Jan DQM challenge using GREN data
                 untracked double NADA_Ecand_cut0 = 1.5 // orig values was 1.0
