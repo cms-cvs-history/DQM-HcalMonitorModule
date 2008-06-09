@@ -1,5 +1,8 @@
         
     include "DQM/HcalMonitorModule/data/HcalMonitorModule.cfi"
+    replace hcalMonitor.DigiOccThresh       = -999999999  //Temporary measure while DigiOcc is reworked.
+    replace hcalMonitor.PedestalsPerChannel = false
+
     replace hcalMonitor.DataFormatMonitor = true
     replace hcalMonitor.DigiMonitor       = true
     replace hcalMonitor.HotCellMonitor    = true
