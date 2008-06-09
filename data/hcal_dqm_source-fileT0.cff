@@ -5,10 +5,9 @@
     replace hcalMonitor.HotCellMonitor    = true
     replace hcalMonitor.RecHitMonitor     = true
     replace hcalMonitor.TrigPrimMonitor   = true
-
-    replace hcalMonitor.PedestalMonitor   = false
+    replace hcalMonitor.PedestalMonitor   = true
+    replace hcalMonitor.DeadCellMonitor   = true
     replace hcalMonitor.LEDMonitor        = false
-    replace hcalMonitor.DeadCellMonitor   = false
     replace hcalMonitor.MTCCMonitor       = false
     replace hcalMonitor.CaloTowerMonitor  = false
     replace hcalMonitor.HcalAnalysis      = false

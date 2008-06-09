@@ -9,10 +9,10 @@
     replace hcalClient.RecHitClient     = true
     replace hcalClient.HotCellClient    = true
     replace hcalClient.TrigPrimClient   = true
+    replace hcalClient.PedestalClient   = true
+    replace hcalClient.DeadCellClient   = true
 
     replace hcalClient.LEDClient        = false
-    replace hcalClient.PedestalClient   = false
-    replace hcalClient.DeadCellClient   = false
     replace hcalClient.CaloTowerClient  = false
     
     sequence hcalOfflineDQMClient = { hcalClient }
