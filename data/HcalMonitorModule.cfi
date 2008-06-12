@@ -129,7 +129,7 @@
                 # First threshold is used when looking for hot cells 
     untracked vdouble HBthresholds={3,2,1,5,10}
     untracked vdouble HEthresholds={3,2,1,5,10}
-    untracked vdouble HOthresholds={2,2,1,5,10}
+    untracked vdouble HOthresholds={2,3,1,5,10}
     untracked vdouble HFthresholds={9,2,4,6,10}
 
                 #untracked double HBMaxEta = 41	
