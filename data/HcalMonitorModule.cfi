@@ -34,7 +34,8 @@
                 untracked bool MakeDiagnosticPlots          = true
                 untracked bool MakeDeadCellDiagnosticPlots  = true
                 untracked bool MakeHotCellDiagnosticPlots   = true
-                
+                untracked bool MakeDigiDiagnosticPlots     = false
+
                 // NADA params updated for Jan DQM challenge using GREN data
                 untracked double NADA_Ecand_cut0 = 1.5 // orig values was 1.0
                 untracked double NADA_Ecand_cut1 = 2.5 // orig value was 2.5
