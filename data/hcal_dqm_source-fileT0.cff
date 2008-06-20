@@ -4,10 +4,10 @@
     replace hcalMonitor.PedestalsPerChannel = false
 
     replace hcalMonitor.DataFormatMonitor = true
-    replace hcalMonitor.DigiMonitor       = true
-    replace hcalMonitor.RecHitMonitor     = true
+    replace hcalMonitor.DigiMonitor       = false
+    replace hcalMonitor.RecHitMonitor     = false
     replace hcalMonitor.TrigPrimMonitor   = true
-    replace hcalMonitor.PedestalMonitor   = true
+    replace hcalMonitor.PedestalMonitor   = false
     replace hcalMonitor.DeadCellMonitor   = false
     replace hcalMonitor.HotCellMonitor    = false
     replace hcalMonitor.LEDMonitor        = false

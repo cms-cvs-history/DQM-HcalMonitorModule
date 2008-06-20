@@ -7,10 +7,10 @@
 
     replace hcalClient.SummaryClient    = true
     replace hcalClient.DataFormatClient = true
-    replace hcalClient.DigiClient       = true
-    replace hcalClient.RecHitClient     = true
+    replace hcalClient.DigiClient       = false
+    replace hcalClient.RecHitClient     = false
     replace hcalClient.TrigPrimClient   = true
-    replace hcalClient.PedestalClient   = true
+    replace hcalClient.PedestalClient   = false
     replace hcalClient.DeadCellClient   = false
     replace hcalClient.HotCellClient    = false
 
