@@ -39,7 +39,9 @@
 
 		#Flags for HotCellMonitor.  Thresholds are in GeV
 
-                untracked bool HotCellMonitor = false
+                 untracked bool HotCellMonitor = false
+                 untracked bool useNADA = false // turn on/off neighbor-based hot\ cell finder 
+
                 untracked vdouble thresholds={15,5,2,1.5,1}
     
 
