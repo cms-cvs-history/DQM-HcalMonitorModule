@@ -6,6 +6,7 @@
 		# Verbosity Switch
 		untracked bool debug = false
                 
+                untracked bool showTiming = false
 
 		# Choices for prescaling your module (-1 mean no prescale)
 		# Operate every N events
