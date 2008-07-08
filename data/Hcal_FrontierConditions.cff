@@ -2,3 +2,23 @@ include "Configuration/StandardSequences/data/FrontierConditions_GlobalTag.cff"
 
 
 
+
+es_source es_pool = PoolDBESSource { 
+      using CondDBSetup
+      string connect = "frontier://Frontier/CMS_COND_20X_HCAL"
+      string timetype = "runnumber"    
+      untracked uint32 authenticationMethod = 0
+           VPSet toGet = {
+                    {string record = "HcalElectronicsMapRcd"
+                     string tag    = "official_emap_v5.01"
+                    }
+           } }
+
+// This is another way to the same thing.
+// es_source es_ascii = HcalTextCalibrations { VPSet input = {
+//    {string object = "ElectronicsMap"
+//       FileInPath file = "CondFormats/HcalObjects/data/official_emap_v5.01_080619.txt"
+//     }      
+//   } }
+
+es_prefer es_pool = PoolDBESSource{}
