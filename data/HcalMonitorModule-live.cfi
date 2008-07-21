@@ -40,12 +40,14 @@
 
 		#Flags for HotCellMonitor.  Thresholds are in GeV
 
-                 untracked bool HotCellMonitor = false
-                 untracked bool useNADA = false // turn on/off neighbor-based hot\ cell finder 
+                untracked bool HotCellMonitor = false
+                untracked bool HotCell_checkThreshold = true // turn on/off check that cell > threshold
+                untracked bool HotCell_checkNADA = true // turn on/off neighbor-based hot cell finder
+                untracked bool HotCell_checkAbovePed = true // turn on/off check that digis > pedestal + Nsigma 
 
                 untracked vdouble thresholds={15,5,2,1.5,1}
-    
-
+                untracked double HotCellDigiSigma = 5.
+              
                 // NADA params updated for Jan DQM challenge using GREN data
                 untracked double NADA_Ecand_cut0 = 1.5 // orig values was 1.0
                 untracked double NADA_Ecand_cut1 = 2.5 // orig value was 2.5
@@ -62,7 +64,8 @@
    
                 #Flags for DeadCellMonitor
                 untracked bool DeadCellMonitor = false
-
+                untracked bool DeadCell_checkAbovePed = true // check that digis occasionally above pedestal
+    
                 untracked double coolcellfrac = 0.5 // fraction of cell's neighbors that must be significantly hotter than the cell for the cell to be considered "cool"
                 untracked int32 checkNevents = 25 
                 untracked double ped_Nsigma = 0
