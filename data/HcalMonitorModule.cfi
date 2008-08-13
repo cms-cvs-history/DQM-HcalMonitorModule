@@ -24,6 +24,7 @@
                 InputTag hbheRecHitLabel = hbhereco
                 InputTag hfRecHitLabel = hfreco
                 InputTag hoRecHitLabel = horeco
+		InputTag hcalLaserLabel = hcalLaserReco
   	        InputTag gtLabel = l1GtUnpack
                 InputTag caloTowerLabel = towerMaker
     
@@ -99,6 +100,11 @@
 	        untracked bool LEDMonitor = true
 	        untracked bool LEDPerChannel = true
 		untracked double LED_ADC_Thresh = -1000
+
+		#Flags for Laser monitor
+	        untracked bool LaserMonitor = true
+	        untracked bool LaserPerChannel = true
+		untracked double Laser_ADC_Thresh = -1000
 
 		#Flags for TPG monitor
 		untracked bool TrigPrimMonitor = true
