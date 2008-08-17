@@ -24,7 +24,8 @@
                 InputTag hbheRecHitLabel = hbhereco
                 InputTag hfRecHitLabel = hfreco
                 InputTag hoRecHitLabel = horeco
-		InputTag hcalLaserLabel = hcalLaserReco
+                InputTag zdcRecHitLabel = zdcreco
+		InputTag hcalLaserLabel = hcalLaserReco  
   	        InputTag gtLabel = l1GtUnpack
                 InputTag caloTowerLabel = towerMaker
     
