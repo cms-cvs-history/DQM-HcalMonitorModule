@@ -8,16 +8,16 @@ process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(1000)
     )
 
-process.source = cms.Source("NewEventStreamFileReader",
-                            fileNames = cms.untracked.vstring('/store/data/GlobalCruzet3MW33/A/000/056/416/GlobalCruzet3MW33.00056416.0001.A.storageManager.0.0000.dat',
-                            '/store/data/GlobalCruzet3MW33/A/000/056/416/GlobalCruzet3MW33.00056416.0001.A.storageManager.1.0000.dat',
-                            '/store/data/GlobalCruzet3MW33/A/000/056/416/GlobalCruzet3MW33.00056416.0001.A.storageManager.2.0000.dat',
-                            '/store/data/GlobalCruzet3MW33/A/000/056/416/GlobalCruzet3MW33.00056416.0001.A.storageManager.3.0000.dat')
-                            )
+##process.source = cms.Source("NewEventStreamFileReader",
+##                            fileNames = cms.untracked.vstring('/store/data/GlobalCruzet3MW33/A/000/056/416/GlobalCruzet3MW33.00056416.0001.A.storageManager.0.0000.dat',
+##                            '/store/data/GlobalCruzet3MW33/A/000/056/416/GlobalCruzet3MW33.00056416.0001.A.storageManager.1.0000.dat',
+##                            '/store/data/GlobalCruzet3MW33/A/000/056/416/GlobalCruzet3MW33.00056416.0001.A.storageManager.2.0000.dat',
+##                            '/store/data/GlobalCruzet3MW33/A/000/056/416/GlobalCruzet3MW33.00056416.0001.A.storageManager.3.0000.dat')
+##                            )
 
-### process.source = cms.Source("PoolSource",
-###     fileNames = cms.untracked.vstring('/store/data/CRUZET3/Cosmics/RAW/v1/000/051/199/EA1F908F-AD4E-DD11-8235-000423D6A6F4.root')
-### )
+process.source = cms.Source("PoolSource",
+    fileNames = cms.untracked.vstring('file:/tmp/78318520-3BA5-DD11-B2A0-000423D944DC.root')
+)
 
 # process.source = cms.Source("EventStreamHttpReader",
 #                             sourceURL = cms.string('http://cmsmon:50082/urn:xdaq-application:lid=29'),
@@ -120,6 +120,7 @@ process.hcalMonitor.PedestalsInFC = True
 
 # Turn on/off individual hcalMonitor modules ------------
 process.hcalMonitor.DataFormatMonitor   = True
+process.hcalMonitor.DataIntegrityTask   = True
 process.hcalMonitor.DigiMonitor         = True
 process.hcalMonitor.RecHitMonitor       = True
 process.hcalMonitor.TrigPrimMonitor     = True
@@ -142,7 +143,7 @@ process.load("DQM.HcalMonitorClient.HcalMonitorClient_cfi")
 process.hcalClient.plotPedRAW = True
 process.hcalClient.DoPerChanTests = False
 # suppresses html output from HCalClient  
-process.hcalClient.baseHtmlDir = '.'
+process.hcalClient.baseHtmlDir = ''
 
 # Turn on/off individual hcalClient modules -------------
 # by default, set them equal to the hcalMonitor values.
@@ -151,7 +152,7 @@ process.hcalClient.baseHtmlDir = '.'
 # just set the appropriate client value to False)
 
 process.hcalClient.SummaryClient        = True
-process.hcalClient.DataFormatClient     = process.hcalMonitor.DataMonitor
+process.hcalClient.DataFormatClient     = process.hcalMonitor.DataFormatMonitor
 process.hcalClient.DigiClient           = process.hcalMonitor.DigiMonitor
 process.hcalClient.RecHitClient         = process.hcalMonitor.RecHitMonitor
 process.hcalClient.TrigPrimClient       = process.hcalMonitor.TrigPrimMonitor

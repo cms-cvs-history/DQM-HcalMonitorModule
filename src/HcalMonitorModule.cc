@@ -4,8 +4,8 @@
 /*
  * \file HcalMonitorModule.cc
  * 
- * $Date: 2008/09/05 22:07:25 $
- * $Revision: 1.74 $
+ * $Date: 2008/09/09 12:13:52 $
+ * $Revision: 1.75 $
  * \author W Fisher
  *
 */
@@ -23,7 +23,8 @@ HcalMonitorModule::HcalMonitorModule(const edm::ParameterSet& ps){
   meEvtMask_=0; meFEDS_=0;
   meLatency_=0; meQuality_=0;
   fedsListed_ = false;
-  digiMon_ = NULL;   dfMon_ = NULL; 
+  digiMon_ = NULL;   dfMon_ = NULL;
+  diMon_=NULL;
   rhMon_ = NULL;     pedMon_ = NULL; 
   ledMon_ = NULL;    mtccMon_ = NULL;
   hotMon_ = NULL;    tempAnalysis_ = NULL;
@@ -59,7 +60,13 @@ HcalMonitorModule::HcalMonitorModule(const edm::ParameterSet& ps){
     dfMon_ = new HcalDataFormatMonitor();
     dfMon_->setup(ps, dbe_);
   }
-  
+
+   if ( ps.getUntrackedParameter<bool>("DataIntegrityTask", false) ) {
+    if(debug_) cout << "HcalMonitorModule: DataIntegrity task flag is on...." << endl;
+    diMon_ = new HcalDataIntegrityTask();
+    diMon_->setup(ps, dbe_);
+  }
+
   if ( ps.getUntrackedParameter<bool>("DigiMonitor", false) ) {
     if(debug_) cout << "HcalMonitorModule: Digi monitor flag is on...." << endl;
     digiMon_ = new HcalDigiMonitor();
@@ -339,6 +346,7 @@ void HcalMonitorModule::endJob(void) {
   if(rhMon_!=NULL) rhMon_->done();
   if(digiMon_!=NULL) digiMon_->done();
   if(dfMon_!=NULL) dfMon_->done();
+  if(diMon_!=NULL) diMon_->done();
   if(pedMon_!=NULL) pedMon_->done();
   if(ledMon_!=NULL) ledMon_->done();
   if(laserMon_!=NULL) laserMon_->done();
@@ -360,6 +368,7 @@ void HcalMonitorModule::reset(){
   if(rhMon_!=NULL)   rhMon_->reset();
   if(digiMon_!=NULL) digiMon_->reset();
   if(dfMon_!=NULL)   dfMon_->reset();
+  if(diMon_!=NULL)   diMon_->reset();
   if(pedMon_!=NULL)  pedMon_->reset();
   if(ledMon_!=NULL)  ledMon_->reset();
   if(laserMon_!=NULL)  laserMon_->reset();
@@ -531,6 +540,10 @@ void HcalMonitorModule::analyze(const edm::Event& e, const edm::EventSetup& even
 
   if((dfMon_ != NULL) && (evtMask&DO_HCAL_DFMON) && rawOK_) 
     dfMon_->processEvent(*rawraw,*report,*readoutMap_);
+
+  if (diMon_ != NULL && rawOK_)
+    diMon_->processEvent(*rawraw,*report,*readoutMap_);
+
   if (showTiming_)
     {
       cpu_timer.stop();
