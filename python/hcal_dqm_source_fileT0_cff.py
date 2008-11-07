@@ -11,6 +11,7 @@ hcalMonitor.DigiOccThresh          = -999999999
 hcalMonitor.PedestalsPerChannel    = False
 hcalMonitor.PedestalsInFC          = True
 hcalMonitor.DataFormatMonitor      = True
+hcalMonitor.DataIntegrityTask      = True
 hcalMonitor.DigiMonitor            = True
 hcalMonitor.RecHitMonitor          = True
 hcalMonitor.BeamMonitor            = True
