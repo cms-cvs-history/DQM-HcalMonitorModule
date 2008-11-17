@@ -4,8 +4,8 @@
 /*
  * \file HcalMonitorModule.cc
  * 
- * $Date: 2008/11/04 18:54:56 $
- * $Revision: 1.75.2.1 $
+ * $Date: 2008/11/11 12:39:14 $
+ * $Revision: 1.75.2.2 $
  * \author W Fisher
  *
 */
@@ -170,7 +170,7 @@ HcalMonitorModule::HcalMonitorModule(const edm::ParameterSet& ps){
 //--------------------------------------------------------
 HcalMonitorModule::~HcalMonitorModule(){
   
-  if(true /* debug_ */) printf("HcalMonitorModule: Destructor.....\n");
+  if( debug_ ) printf("HcalMonitorModule: Destructor.....\n");
   
 // if (dbe_){    
 //   if(digiMon_!=NULL)   {  digiMon_->clearME();}
@@ -361,7 +361,6 @@ void HcalMonitorModule::endJob(void) {
 //--------------------------------------------------------
 void HcalMonitorModule::reset(){
 
-  //if(true /* debug_ */)
   if (debug_) cout << "HcalMonitorModule: reset...." << endl;
 
   if(rhMon_!=NULL)   rhMon_->reset();
