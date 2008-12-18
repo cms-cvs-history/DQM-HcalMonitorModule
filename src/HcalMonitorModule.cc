@@ -4,12 +4,15 @@
 /*
  * \file HcalMonitorModule.cc
  * 
- * $Date: 2008/11/10 13:41:56 $
- * $Revision: 1.92 $
+ * $Date: 2008/12/05 13:23:08 $
+ * $Revision: 1.92.2.1 $
  * \author W Fisher
  * \author J Temple
  *
 */
+
+using namespace std;
+using namespace edm;
 
 //--------------------------------------------------------
 HcalMonitorModule::HcalMonitorModule(const edm::ParameterSet& ps){
@@ -271,42 +274,43 @@ void HcalMonitorModule::beginJob(const edm::EventSetup& c){
 
     // NULL if illegal; ignore
     if (!detid_.null()) {
-      try {
-	hcaldetid_ = HcalDetId(detid_);
-
-	dccid = eid->dccid();
-	dcc_spgt = pair <int,int> (dccid, eid->spigot());
+      if (detid_.det()!=4) continue;
+      if (detid_.subdetId()!=HcalBarrel &&
+	  detid_.subdetId()!=HcalEndcap &&
+	  detid_.subdetId()!=HcalOuter  &&
+	  detid_.subdetId()!=HcalForward) continue;
+      hcaldetid_ = HcalDetId(detid_);
       
-	thisDCC = DCCtoCell.find(dccid);
-	thisHTR = HTRtoCell.find(dcc_spgt);
+      dccid = eid->dccid();
+      dcc_spgt = pair <int,int> (dccid, eid->spigot());
       
-	// If this DCC has no entries, make this its first one.
-	if (thisDCC == DCCtoCell.end()) {
-	  std::vector <HcalDetId> tempv;
-	  tempv.push_back(hcaldetid_);
-	  pair <int, std::vector<HcalDetId> > thispair;
-	  thispair = pair <int, std::vector<HcalDetId> > (dccid,tempv);
-	  DCCtoCell.insert(thispair); 
-	}
-	else {
-	  thisDCC->second.push_back(hcaldetid_);
-	}
+      thisDCC = DCCtoCell.find(dccid);
+      thisHTR = HTRtoCell.find(dcc_spgt);
       
-	// If this HTR has no entries, make this its first one.
-	if (thisHTR == HTRtoCell.end()) {
-	  std::vector <HcalDetId> tempv;
-	  tempv.push_back(hcaldetid_);
-	  pair < pair <int,int>, std::vector<HcalDetId> > thispair;
-	  thispair = pair <pair <int,int>, std::vector<HcalDetId> > (dcc_spgt,tempv);
-	  HTRtoCell.insert(thispair); 
-	}
-	else {
-	  thisHTR->second.push_back(hcaldetid_);	
-	}
-
-      } catch (...) {
+      // If this DCC has no entries, make this its first one.
+      if (thisDCC == DCCtoCell.end()) {
+	std::vector <HcalDetId> tempv;
+	tempv.push_back(hcaldetid_);
+	pair <int, std::vector<HcalDetId> > thispair;
+	thispair = pair <int, std::vector<HcalDetId> > (dccid,tempv);
+	DCCtoCell.insert(thispair); 
       }
-    } // fi (!detid_.null()) 
+      else {
+	thisDCC->second.push_back(hcaldetid_);
+      }
+      
+      // If this HTR has no entries, make this its first one.
+      if (thisHTR == HTRtoCell.end()) {
+	std::vector <HcalDetId> tempv;
+	tempv.push_back(hcaldetid_);
+	pair < pair <int,int>, std::vector<HcalDetId> > thispair;
+	thispair = pair <pair <int,int>, std::vector<HcalDetId> > (dcc_spgt,tempv);
+	HTRtoCell.insert(thispair); 
+      }
+      else {
+	thisHTR->second.push_back(hcaldetid_);	
+      }
+    } // if (!detid_.null()) 
   } 
   if (dfMon_) {
     dfMon_->smuggleMaps(DCCtoCell, HTRtoCell);
@@ -370,16 +374,18 @@ void HcalMonitorModule::endLuminosityBlock(const edm::LuminosityBlock& lumiSeg,
 //--------------------------------------------------------
 void HcalMonitorModule::endRun(const edm::Run& r, const edm::EventSetup& context)
 {
-  if (debug_>1)  
-    cout <<"HcalMonitorModule::endRun(...) "<<endl;
+  if (debug_>0)  
+    cout <<"HcalMonitorModule::endRun(...) ievt = "<<ievt_<<endl;
+
   // Do final pedestal histogram filling
   if (pedMon_!=NULL)
     pedMon_->fillPedestalHistos();
+
   if (deadMon_!=NULL)
     deadMon_->fillDeadHistosAtEndRun();
 
   return;
-    }
+}
 
 
 //--------------------------------------------------------
@@ -405,6 +411,7 @@ void HcalMonitorModule::endJob(void) {
 
   if (dump2database_)
     {
+      if (debug_>0) cout <<"<HcalMonitorModule::endJob>  Writing file for database"<<endl;
       std::vector<DetId> mydetids = chanquality_->getAllChannels();
       HcalChannelQuality* newChanQual = new HcalChannelQuality();
       for (unsigned int i=0;i<mydetids.size();++i)
@@ -412,16 +419,25 @@ void HcalMonitorModule::endJob(void) {
 	  if (mydetids[i].det()!=4) continue; // not hcal
 	  //HcalDetId id(mydetids[i]);
 	  HcalDetId id=mydetids[i];
+
 	  // get original channel status item
 	  const HcalChannelStatus* origstatus=chanquality_->getValues(mydetids[i]);
 	  // make copy of status
 	  HcalChannelStatus* mystatus=new HcalChannelStatus(origstatus->rawId(),origstatus->getValue());
 	  if (myquality_.find(id)!=myquality_.end())
 	    {
-
+	      // Set bit 1 for cells which aren't present
+	      if ((id.subdet()==HcalBarrel &&!HBpresent_) ||
+		  (id.subdet()==HcalEndcap &&!HEpresent_) ||
+		  (id.subdet()==HcalOuter  &&!HOpresent_) ||
+		  (id.subdet()==HcalForward&&!HFpresent_))
+		{
+		  mystatus->setBit(1);
+		}
+	      // Only perform these checks if bit 0 not set?
 	      // check dead cells
 	      if ((myquality_[id]>>5)&0x1)
-		  mystatus->setBit(5);
+		mystatus->setBit(5);
 	      else
 		mystatus->unsetBit(5);
 	      // check hot cells
@@ -429,7 +445,7 @@ void HcalMonitorModule::endJob(void) {
 		mystatus->setBit(6);
 	      else
 		mystatus->unsetBit(6);
-	    }
+	    } // if (myquality_.find_...)
 	  newChanQual->addValues(*mystatus);
 	} // for (unsigned int i=0;...)
       // Now dump out to text file
@@ -437,10 +453,7 @@ void HcalMonitorModule::endJob(void) {
       file <<"HcalDQMstatus_"<<irun_<<".txt";
       std::ofstream outStream(file.str().c_str());
       HcalDbASCIIIO::dumpObject (outStream, (*newChanQual));
-      /*
-      std::ofstream dumb("orig.txt");
-      HcalDbASCIIIO::dumpObject (dumb,(*chanquality_));
-      */
+
     } // if (dump2databse_)
   return;
 }
@@ -511,24 +524,21 @@ void HcalMonitorModule::analyze(const edm::Event& e, const edm::EventSetup& even
   // try to get raw data and unpacker report
   edm::Handle<FEDRawDataCollection> rawraw;  
 
-  try{
-    e.getByType(rawraw);
-  }
-  catch(...)
+  // Trying new getByLabel
+  if (!(e.getByLabel("source",rawraw)))
     {
       rawOK_=false;
+      LogWarning("HcalMonitorModule")<<" source not available";
     }
   if (rawOK_&&!rawraw.isValid()) {
     rawOK_=false;
   }
 
   edm::Handle<HcalUnpackerReport> report;  
-  try{
-    e.getByType(report);
-  }
-  catch(...)
+  if (!(e.getByLabel("hcalDigis",report)))
     {
       rawOK_=false;
+      LogWarning("HcalMonitorModule")<<" hcalDigis not available";
     }
   if (rawOK_&&!report.isValid()) {
     rawOK_=false;
@@ -551,32 +561,28 @@ void HcalMonitorModule::analyze(const edm::Event& e, const edm::EventSetup& even
   edm::Handle<HcalTrigPrimDigiCollection> tp_digi;
   edm::Handle<HcalLaserDigi> laser_digi;
 
-  try 
-    {
-      e.getByLabel(inputLabelDigi_,hbhe_digi);
-    }
-  catch(...)
+  if (!(e.getByLabel(inputLabelDigi_,hbhe_digi)))
+    digiOK_=false;
+
+  if (digiOK_&&!hbhe_digi.isValid()) {
+    digiOK_=false;
+    LogWarning("HcalMonitorModule")<< inputLabelDigi_<<" hbhe_digi not available";
+  }
+
+  if (!(e.getByLabel(inputLabelDigi_,hf_digi)))
     {
       digiOK_=false;
+      LogWarning("HcalMonitorModule")<< inputLabelDigi_<<" hf_digi not available";
     }
-  if (digiOK_&&!hbhe_digi.isValid()) {
-
-    digiOK_=false;
-  }
-
-  try{
-  e.getByLabel(inputLabelDigi_,hf_digi);
-  }
-  catch(...)
-    {digiOK_=false;}
   if (digiOK_&&!hf_digi.isValid()) {
     digiOK_=false;
   }
 
-  try
-    {e.getByLabel(inputLabelDigi_,ho_digi);}
-  catch(...)
-    {digiOK_=false;}
+  if (!(e.getByLabel(inputLabelDigi_,ho_digi)))
+    {
+      digiOK_=false;
+      LogWarning("HcalMonitorModule")<< inputLabelDigi_<<" ho_digi not available";
+    }
   if (digiOK_&&!ho_digi.isValid()) {
     digiOK_=false;
   }
@@ -600,19 +606,16 @@ void HcalMonitorModule::analyze(const edm::Event& e, const edm::EventSetup& even
       return;
     }
 
-  try{
-    e.getByLabel(inputLabelDigi_,tp_digi);
-  }
-  catch(...)
-    {tpdOK_=false;}
+  if (!(e.getByLabel(inputLabelDigi_,tp_digi)))
+    {
+      tpdOK_=false;
+      LogWarning("HcalMonitorModule")<< inputLabelDigi_<<" tp_digi not available"; 
+    }
 
   if (tpdOK_ && !tp_digi.isValid()) {
     tpdOK_=false;
   }
-  try{
-  e.getByLabel(inputLabelLaser_,laser_digi);
-  }
-  catch(...)
+  if (!(e.getByLabel(inputLabelLaser_,laser_digi)))
     {laserOK_=false;}
   if (laserOK_&&!laser_digi.isValid()) {
     laserOK_=false;
@@ -625,37 +628,37 @@ void HcalMonitorModule::analyze(const edm::Event& e, const edm::EventSetup& even
   edm::Handle<ZDCRecHitCollection> zdc_hits;
   edm::Handle<CaloTowerCollection> calotowers;
 
-  try{
-  e.getByLabel(inputLabelRecHitHBHE_,hb_hits);
-  }
-  catch(...)
-    {rechitOK_=false;}
+  if (!(e.getByLabel(inputLabelRecHitHBHE_,hb_hits)))
+    {
+      rechitOK_=false;
+      LogWarning("HcalMonitorModule")<< inputLabelRecHitHBHE_<<" not available"; 
+    }
   
   if (rechitOK_&&!hb_hits.isValid()) {
     rechitOK_ = false;
   }
-  try{
-  e.getByLabel(inputLabelRecHitHO_,ho_hits);
-  }
-  catch(...)
-    {rechitOK_=false;}
+  if (!(e.getByLabel(inputLabelRecHitHO_,ho_hits)))
+    {
+      rechitOK_=false;
+      LogWarning("HcalMonitorModule")<< inputLabelRecHitHO_<<" not available"; 
+    }
   if (rechitOK_&&!ho_hits.isValid()) {
     rechitOK_ = false;
   }
-  try{
-    e.getByLabel(inputLabelRecHitHF_,hf_hits);
-  }
-  catch(...)
-    {rechitOK_=false;}
+  if (!(e.getByLabel(inputLabelRecHitHF_,hf_hits)))
+    {
+      rechitOK_=false;
+      LogWarning("HcalMonitorModule")<< inputLabelRecHitHF_<<" not available"; 
+    }
   if (rechitOK_&&!hf_hits.isValid()) {
     rechitOK_ = false;
   }
   
-  try{
-    e.getByLabel(inputLabelRecHitZDC_,zdc_hits);
-  }
-  catch(...)
-    {zdchitOK_=false;}
+  if (!(e.getByLabel(inputLabelRecHitZDC_,zdc_hits)))
+    {
+      zdchitOK_=false;
+      LogWarning("HcalMonitorModule")<< inputLabelRecHitZDC_<<" not available"; 
+    }
   if (zdchitOK_&&!zdc_hits.isValid()) {
     zdchitOK_ = false;
     //cout <<"CANNOT GET ZDC HITS!!!!"<<endl;
@@ -665,11 +668,11 @@ void HcalMonitorModule::analyze(const edm::Event& e, const edm::EventSetup& even
   // try to get calotowers 
   if (ctMon_!=NULL)
     {
-      try{
-      e.getByLabel(inputLabelCaloTower_,calotowers);
-      }
-      catch(...)
-	{calotowerOK_=false;}
+      if (!(e.getByLabel(inputLabelCaloTower_,calotowers)))
+	{
+	  calotowerOK_=false;
+	  LogWarning("HcalMonitorModule")<< inputLabelCaloTower_<<" not available"; 
+	}
       if(calotowerOK_&&!calotowers.isValid()){
 	calotowerOK_=false;
       }
@@ -755,8 +758,8 @@ void HcalMonitorModule::analyze(const edm::Event& e, const edm::EventSetup& even
     // But is ZDC is okay, we'll make rec hit plots for that as well.
     if (zdchitOK_)
       {
-	if (debug_) cout <<"PROCESSING ZDC!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<endl;
-	rhMon_->processZDC(*zdc_hits);
+	if (debug_>1) cout <<"PROCESSING ZDC!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<endl;
+	//rhMon_->processZDC(*zdc_hits);
       }
     }
   if (showTiming_)
