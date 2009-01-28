@@ -20,6 +20,8 @@ hcalMonitor = cms.EDFilter("HcalMonitorModule",
                            checkHB = cms.untracked.bool(True),
                            checkHO = cms.untracked.bool(True),
 
+                           FEDRawDataCollection = cms.untracked.InputTag('source'),
+
                            MonitorDaemon = cms.untracked.bool(True),
                            HcalAnalysis = cms.untracked.bool(False),
                            HotCells = cms.untracked.vstring(),
@@ -29,7 +31,7 @@ hcalMonitor = cms.EDFilter("HcalMonitorModule",
                            minErrorFlag = cms.untracked.double(0.05), 
 
                            # Turn on/off timing diagnostic info
-                            diagnosticPrescaleLS = cms.untracked.int32(-1),
+                           diagnosticPrescaleLS = cms.untracked.int32(-1),
                            diagnosticPrescaleEvt = cms.untracked.int32(-1),
                            diagnosticPrescaleTime = cms.untracked.int32(-1),
                            diagnosticPrescaleUpdate = cms.untracked.int32(-1),
