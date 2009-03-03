@@ -4,8 +4,8 @@
 /*
  * \file HcalMonitorModule.cc
  * 
- * $Date: 2009/02/13 17:29:29 $
- * $Revision: 1.107 $
+ * $Date: 2009/03/02 09:36:50 $
+ * $Revision: 1.102.2.2 $
  * \author W Fisher
  * \author J Temple
  *
@@ -200,7 +200,22 @@ HcalMonitorModule::HcalMonitorModule(const edm::ParameterSet& ps){
 //--------------------------------------------------------
 HcalMonitorModule::~HcalMonitorModule()
 {
+  /* Email from Giuseppe on 3/3/09:
+     I think you should just move this snippet out of the destructor, and into the endJob().
+     
+     AFAIK, the proper way should be to
+     
+     - remove the ME in the endJob()
+     - delete in the destructor only the objects that you indeed created in the module and really 'own' (like
+     your tasks).
+
+     Or, you can just do not do the cleanup, and leave to DQMStore to do it.
+
+     ----- For now, we will let DQMStore do the cleanup
+  */
+ 
   
+  /*
   if (dbe_!=0)
     {    
       if(digiMon_!=0)   {  digiMon_->clearME();}
@@ -259,8 +274,10 @@ HcalMonitorModule::~HcalMonitorModule()
     { delete tempAnalysis_; 
     tempAnalysis_=0; 
     }
-  if (evtSel_!=0) {delete evtSel_; evtSel_ = 0;
-  }
+  if (evtSel_!=0) 
+    {delete evtSel_; evtSel_ = 0;
+    }
+  */
 } //void HcalMonitorModule::~HcalMonitorModule()
 
 //--------------------------------------------------------
@@ -855,7 +872,7 @@ void HcalMonitorModule::analyze(const edm::Event& e, const edm::EventSetup& even
     }
 
   // Hot Cell monitor task
-  if((hotMon_ != NULL) && (evtMask&DO_HCAL_RECHITMON) && rechitOK_) 
+  if((hotMon_ != NULL) && (evtMask&DO_HCAL_RECHITMON) && rechitOK_ && digiOK_) 
     {
       hotMon_->processEvent(*hb_hits,*ho_hits,*hf_hits, 
 			    *hbhe_digi,*ho_digi,*hf_digi,*conditions_);
@@ -906,7 +923,7 @@ void HcalMonitorModule::analyze(const edm::Event& e, const edm::EventSetup& even
     }
 
   // Expert monitor plots
-  if (expertMon_ != NULL) 
+  if (expertMon_ != NULL && rawOK_ && digiOK_ && tpdOK_ && rechitOK_) 
     {
       expertMon_->processEvent(*hb_hits,*ho_hits,*hf_hits,
 			       *hbhe_digi,*ho_digi,*hf_digi,
@@ -921,7 +938,7 @@ void HcalMonitorModule::analyze(const edm::Event& e, const edm::EventSetup& even
     }
 
   // Empty Event/Unsuppressed monitor plots
-  if (eeusMon_ != NULL) 
+  if (eeusMon_ != NULL && rawOK_) 
     {
       eeusMon_->processEvent( *rawraw,*report,*readoutMap_);
     }
