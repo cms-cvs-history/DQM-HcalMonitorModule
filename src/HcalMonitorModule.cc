@@ -4,8 +4,8 @@
 /*
  * \file HcalMonitorModule.cc
  * 
- * $Date: 2009/01/21 17:56:33 $
- * $Revision: 1.101 $
+ * $Date: 2009/02/13 17:29:29 $
+ * $Revision: 1.107 $
  * \author W Fisher
  * \author J Temple
  *
@@ -31,7 +31,7 @@ HcalMonitorModule::HcalMonitorModule(const edm::ParameterSet& ps){
   deadMon_ = 0;   tpMon_ = 0;
   ctMon_ = 0;     beamMon_ = 0;
   laserMon_ = 0;
-  expertMon_ = 0;
+  expertMon_ = 0;  eeusMon_ = 0;
 
   // initialize hcal quality object
   
@@ -63,6 +63,8 @@ HcalMonitorModule::HcalMonitorModule(const edm::ParameterSet& ps){
   
   showTiming_ = ps.getUntrackedParameter<bool>("showTiming", false);
   dump2database_   = ps.getUntrackedParameter<bool>("dump2database",false); // dumps output to database file
+
+  FEDRawDataCollection_ = ps.getUntrackedParameter<edm::InputTag>("FEDRawDataCollection",edm::InputTag("source",""));
 
   // Valgrind complained when the test was simply:  if ( ps.getUntrackedParameter<bool>("DataFormatMonitor", false))
   // try assigning value to bool first?
@@ -160,7 +162,13 @@ HcalMonitorModule::HcalMonitorModule(const edm::ParameterSet& ps){
     tempAnalysis_ = new HcalTemplateAnalysis();
     tempAnalysis_->setup(ps);
   }
-  
+
+  if (ps.getUntrackedParameter<bool>("EEUSMonitor",false))
+    {
+      if (debug_>0) cout <<"HcalMonitorModule:  Empty Event/Unsuppressed Moniotr is on..."<<endl;
+      eeusMon_ = new HcalEEUSMonitor();
+      eeusMon_->setup(ps, dbe_);
+    }
 
   // set parameters   
   prescaleEvt_ = ps.getUntrackedParameter<int>("diagnosticPrescaleEvt", -1);
@@ -442,6 +450,7 @@ void HcalMonitorModule::endJob(void) {
   if (ctMon_!=NULL) ctMon_->done();
   if (beamMon_!=NULL) beamMon_->done();
   if (expertMon_!=NULL) expertMon_->done();
+  if (eeusMon_!=NULL) eeusMon_->done();
   if(tempAnalysis_!=NULL) tempAnalysis_->done();
 
   if (dump2database_)
@@ -513,6 +522,8 @@ void HcalMonitorModule::reset(){
   if(ctMon_!=NULL) ctMon_->reset();
   if(beamMon_!=NULL) beamMon_->reset();
   if(expertMon_!=NULL) expertMon_->reset();
+  if(eeusMon_!=NULL) eeusMon_->reset();
+
 }
 
 //--------------------------------------------------------
@@ -528,8 +539,8 @@ void HcalMonitorModule::analyze(const edm::Event& e, const edm::EventSetup& even
 
   // skip this event if we're prescaling...
   ievt_pre_++; // need to increment counter before calling prescale
-  if(prescale()) return;
 
+  if(prescale()) return;
   meLatency_->Fill(psTime_.elapsedTime);
 
   // Do default setup...
@@ -562,7 +573,7 @@ void HcalMonitorModule::analyze(const edm::Event& e, const edm::EventSetup& even
   edm::Handle<FEDRawDataCollection> rawraw;  
 
   // Trying new getByLabel
-  if (!(e.getByLabel("source",rawraw)))
+  if (!(e.getByLabel(FEDRawDataCollection_,rawraw)))
     {
       rawOK_=false;
       LogWarning("HcalMonitorModule")<<" source not available";
@@ -600,7 +611,11 @@ void HcalMonitorModule::analyze(const edm::Event& e, const edm::EventSetup& even
 
   if (!(e.getByLabel(inputLabelDigi_,hbhe_digi)))
     digiOK_=false;
-
+  /*
+  if (!(e.getByType(hbhe_digi)))
+    digiOK_=false;
+  cout <<"TEST HBHE = "<<(*hbhe_digi).size()<<endl;
+  */
   if (digiOK_&&!hbhe_digi.isValid()) {
     digiOK_=false;
     LogWarning("HcalMonitorModule")<< inputLabelDigi_<<" hbhe_digi not available";
@@ -623,16 +638,30 @@ void HcalMonitorModule::analyze(const edm::Event& e, const edm::EventSetup& even
   if (digiOK_&&!ho_digi.isValid()) {
     digiOK_=false;
   }
-
+  
   // check which Subdetectors are on by seeing which are reading out FED data
   // Assume subdetectors aren't present, unless we explicitly find otherwise
-  if ((checkHB_ && HBpresent_==0) ||
-      (checkHE_ && HEpresent_==0) ||
-      (checkHO_ && HOpresent_==0) ||
-      (checkHF_ && HFpresent_==0))
-  
-    CheckSubdetectorStatus(*rawraw,*report,*readoutMap_,*hbhe_digi, *ho_digi, *hf_digi);
-    
+
+  if (digiOK_ && rawOK_)
+    { 
+      if ((checkHB_ && HBpresent_==0) ||
+	  (checkHE_ && HEpresent_==0) ||
+	  (checkHO_ && HOpresent_==0) ||
+	  (checkHF_ && HFpresent_==0))
+	
+	CheckSubdetectorStatus(*rawraw,*report,*readoutMap_,*hbhe_digi, *ho_digi, *hf_digi);
+    }
+  else
+    {
+      // Is this the behavior we want?
+      if (debug_>1)
+	cout <<"<HcalMonitorModule::analyze>  digiOK or rawOK error.  Assuming all subdetectors present."<<endl;
+      HBpresent_=1;
+      HEpresent_=1;
+      HOpresent_=1;
+      HFpresent_=1;
+    }
+
   // Case where all subdetectors have no raw data -- skip event
   if ((checkHB_ && HBpresent_==0) &&
       (checkHE_ && HEpresent_==0) &&
@@ -668,7 +697,8 @@ void HcalMonitorModule::analyze(const edm::Event& e, const edm::EventSetup& even
   if (!(e.getByLabel(inputLabelRecHitHBHE_,hb_hits)))
     {
       rechitOK_=false;
-      LogWarning("HcalMonitorModule")<< inputLabelRecHitHBHE_<<" not available"; 
+      //if (debug_>0)
+	LogWarning("HcalMonitorModule")<< inputLabelRecHitHBHE_<<" not available"; 
     }
   
   if (rechitOK_&&!hb_hits.isValid()) {
@@ -677,7 +707,8 @@ void HcalMonitorModule::analyze(const edm::Event& e, const edm::EventSetup& even
   if (!(e.getByLabel(inputLabelRecHitHO_,ho_hits)))
     {
       rechitOK_=false;
-      LogWarning("HcalMonitorModule")<< inputLabelRecHitHO_<<" not available"; 
+      //if (debug_>0) 
+	LogWarning("HcalMonitorModule")<< inputLabelRecHitHO_<<" not available"; 
     }
   if (rechitOK_&&!ho_hits.isValid()) {
     rechitOK_ = false;
@@ -685,7 +716,8 @@ void HcalMonitorModule::analyze(const edm::Event& e, const edm::EventSetup& even
   if (!(e.getByLabel(inputLabelRecHitHF_,hf_hits)))
     {
       rechitOK_=false;
-      LogWarning("HcalMonitorModule")<< inputLabelRecHitHF_<<" not available"; 
+      //if (debug_>0) 
+	LogWarning("HcalMonitorModule")<< inputLabelRecHitHF_<<" not available"; 
     }
   if (rechitOK_&&!hf_hits.isValid()) {
     rechitOK_ = false;
@@ -694,21 +726,22 @@ void HcalMonitorModule::analyze(const edm::Event& e, const edm::EventSetup& even
   if (!(e.getByLabel(inputLabelRecHitZDC_,zdc_hits)))
     {
       zdchitOK_=false;
-      LogWarning("HcalMonitorModule")<< inputLabelRecHitZDC_<<" not available"; 
+      // ZDC Warnings should be suppressed unless debugging is on (since we don't yet normally run zdcreco)
+      if (debug_>0) 
+	LogWarning("HcalMonitorModule")<< inputLabelRecHitZDC_<<" not available"; 
     }
-  if (zdchitOK_&&!zdc_hits.isValid()) {
-    zdchitOK_ = false;
-    //cout <<"CANNOT GET ZDC HITS!!!!"<<endl;
-    //cout <<"input label = "<<inputLabelRecHitZDC_<<endl;
-  }
-
+  if (zdchitOK_&&!zdc_hits.isValid()) 
+    {
+      zdchitOK_ = false;
+    }
+  
   // try to get calotowers 
   if (ctMon_!=NULL)
     {
       if (!(e.getByLabel(inputLabelCaloTower_,calotowers)))
 	{
 	  calotowerOK_=false;
-	  LogWarning("HcalMonitorModule")<< inputLabelCaloTower_<<" not available"; 
+	  if (debug_>0) LogWarning("HcalMonitorModule")<< inputLabelCaloTower_<<" not available"; 
 	}
       if(calotowerOK_&&!calotowers.isValid()){
 	calotowerOK_=false;
@@ -759,7 +792,9 @@ void HcalMonitorModule::analyze(const edm::Event& e, const edm::EventSetup& even
     }
   // Pedestal monitor task
   if((pedMon_!=NULL) && (evtMask&DO_HCAL_PED_CALIBMON) && digiOK_) 
-    pedMon_->processEvent(*hbhe_digi,*ho_digi,*hf_digi,*conditions_);
+    {
+      pedMon_->processEvent(*hbhe_digi,*ho_digi,*hf_digi,*conditions_);
+    }
   if (showTiming_)
     {
       cpu_timer.stop();
@@ -882,6 +917,18 @@ void HcalMonitorModule::analyze(const edm::Event& e, const edm::EventSetup& even
     {
       cpu_timer.stop();
       if (expertMon_!=NULL) cout <<"TIMER:: EXPERT MONITOR ->"<<cpu_timer.cpuTime()<<endl;
+      cpu_timer.reset(); cpu_timer.start();
+    }
+
+  // Empty Event/Unsuppressed monitor plots
+  if (eeusMon_ != NULL) 
+    {
+      eeusMon_->processEvent( *rawraw,*report,*readoutMap_);
+    }
+  if (showTiming_)
+    {
+      cpu_timer.stop();
+      if (eeusMon_!=NULL) cout <<"TIMER:: EE/US MONITOR ->"<<cpu_timer.cpuTime()<<endl;
       cpu_timer.reset(); cpu_timer.start();
     }
 

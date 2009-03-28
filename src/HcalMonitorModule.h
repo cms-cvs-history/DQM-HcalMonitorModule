@@ -4,8 +4,8 @@
 /*
  * \file HcalMonitorModule.h
  *
- * $Date: 2008/11/10 06:47:40 $
- * $Revision: 1.38 $
+ * $Date: 2009/02/11 18:36:29 $
+ * $Revision: 1.41 $
  * \author W. Fisher
  *
 */
@@ -53,6 +53,7 @@
 #include "DQM/HcalMonitorTasks/interface/HcalCaloTowerMonitor.h"
 #include "DQM/HcalMonitorTasks/interface/HcalTrigPrimMonitor.h"
 #include "DQM/HcalMonitorTasks/interface/HcalTemplateAnalysis.h"
+#include "DQM/HcalMonitorTasks/interface/HcalEEUSMonitor.h"
 #include "TBDataFormats/HcalTBObjects/interface/HcalTBRunData.h"
 
 // Use to hold/get channel status
@@ -177,6 +178,7 @@ public:
 
   edm::InputTag inputLabelCaloTower_;
   edm::InputTag inputLabelLaser_;
+  edm::InputTag FEDRawDataCollection_;
 
   // Maps of readout hardware unit to calorimeter channel
   std::map<uint32_t, std::vector<HcalDetId> > DCCtoCell;
@@ -208,7 +210,8 @@ public:
   HcalCaloTowerMonitor*   ctMon_;
   HcalTrigPrimMonitor*    tpMon_;
   HcalTemplateAnalysis*   tempAnalysis_;
-  
+  HcalEEUSMonitor*        eeusMon_;
+
   edm::ESHandle<HcalDbService> conditions_;
   const HcalElectronicsMap*    readoutMap_;
 
