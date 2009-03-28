@@ -2,6 +2,10 @@ import FWCore.ParameterSet.Config as cms
 from DQM.HcalMonitorModule.HcalMonitorModule_cfi import * # there's probably a better way to do this, once I discover the difference between import and load
 from DQM.HcalMonitorClient.HcalMonitorClient_cfi import * # ditto
 
+
+maxevents=100
+checkNevents=100
+
 process = cms.Process("HCALDQM")
 #----------------------------
 # Event Source
@@ -10,7 +14,7 @@ process = cms.Process("HCALDQM")
 #####################  SET THE NUMBER OF EVENTS OVER WHICH TO RUN HERE #################################
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(1000)
+    input = cms.untracked.int32(maxevents)
     )
 
 ##################### SET YOUR FILE TO CHECK HERE #####################################################
@@ -83,9 +87,14 @@ process.dqmSaver.saveByRun = 1
 #-----------------------------
 # Hcal Conditions: from Global Conditions Tag 
 #-----------------------------
+
+#process.GlobalTag.connect = 'frontier://Frontier/CMS_COND_21X_GLOBALTAG'
+
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
-process.GlobalTag.connect = 'frontier://Frontier/CMS_COND_21X_GLOBALTAG'
-process.GlobalTag.globaltag = 'CRAFT_ALL_V8::All'  # update GlobalTag as neceesary
+process.GlobalTag.globaltag = "CRAFT_30X::All"
+process.es_prefer_GlobalTag = cms.ESPrefer('PoolDBESSource','GlobalTag')
+
+
 process.prefer("GlobalTag")
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
@@ -107,7 +116,7 @@ process.hcalMonitor.debug = 0
 #process.hcalMonitor.DigiOccThresh = -999999999 ##Temporary measure while DigiOcc is reworked -- why was this done in the first place?  What was the problem with a threshold of 0?  -- Jeff. Yes, forgive me, I was young. -- Jason.
 process.hcalMonitor.pedestalsInFC   = True
 process.hcalMonitor.showTiming      = False
-process.hcalMonitor.checkNevents    = 500
+process.hcalMonitor.checkNevents    = checkNevents
 process.hcalMonitor.dump2database   = False
 process.hcalMonitor.AnalyzeOrbitGap = False
 
@@ -116,7 +125,7 @@ process.hcalMonitor.DataFormatMonitor   = True
 process.hcalMonitor.DataIntegrityTask   = True
 process.hcalMonitor.DigiMonitor         = True
 process.hcalMonitor.RecHitMonitor       = True
-process.hcalMonitor.TrigPrimMonitor     = True
+process.hcalMonitor.TrigPrimMonitor     = False
 process.hcalMonitor.DeadCellMonitor     = True
 process.hcalMonitor.HotCellMonitor      = True
 process.hcalMonitor.BeamMonitor         = True
