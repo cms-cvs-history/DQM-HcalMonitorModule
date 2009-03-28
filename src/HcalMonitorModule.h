@@ -4,8 +4,8 @@
 /*
  * \file HcalMonitorModule.h
  *
- * $Date: 2009/02/11 18:36:29 $
- * $Revision: 1.41 $
+ * $Date: 2009/03/02 09:36:50 $
+ * $Revision: 1.39.2.2 $
  * \author W. Fisher
  *
 */
@@ -30,6 +30,7 @@
 
 #include "DataFormats/Provenance/interface/EventID.h"  
 #include "DataFormats/HcalDigi/interface/HcalUnpackerReport.h"
+#include "DataFormats/HcalDigi/interface/HcalCalibrationEventTypes.h"
 #include "DataFormats/L1GlobalTrigger/interface/L1GlobalTriggerReadoutSetup.h"
 #include "DataFormats/L1GlobalTrigger/interface/L1GlobalTriggerReadoutRecord.h"
 #include "DataFormats/L1GlobalTrigger/interface/L1GlobalTriggerReadoutSetupFwd.h"
@@ -121,6 +122,7 @@ public:
 			      );
     
  private:
+  std::vector<int> fedss;
   /********************************************************/
   //  The following member variables can be specified in  //
   //  the configuration input file for the process.       //
@@ -216,6 +218,9 @@ public:
   const HcalElectronicsMap*    readoutMap_;
 
   ofstream m_logFile;
+
+  // Running on the Orbit Gap Calibration events?
+  bool AnalyzeOrbGapCT_;
 
   // Decide whether individual subdetectors should be checked
   bool checkHB_;
