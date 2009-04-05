@@ -5,7 +5,6 @@ hcalMonitor = cms.EDFilter("HcalMonitorModule",
 
                            # GLOBAL VARIABLES
                            debug = cms.untracked.int32(0), # make debug an int so that different values can trigger different levels of messaging
-                           AnalyzeOrbitGap = cms.untracked.bool(False),
 
                            # eta runs from -43->+43  (-41 -> +41 for HCAL, plus ZDC, which we put at |eta|=43.
                            # add one empty bin beyond that for histogramming prettiness 
@@ -69,8 +68,7 @@ hcalMonitor = cms.EDFilter("HcalMonitorModule",
                            PedestalMonitor_endingTimeSlice              = cms.untracked.int32(1),
                            PedestalMonitor_minErrorFlag                 = cms.untracked.double(0.05),
                            PedestalMonitor_checkNevents                 = cms.untracked.int32(1000),
-                           PedestalMonitor_minEntriesPerPed             = cms.untracked.uint32(100),
-                           PedestalMonitor_makeDiagnosticPlots          = cms.untracked.bool(False),
+                           PedestalMonitor_minEntriesPerPed = cms.untracked.uint32(10),
 
                            # DEAD CELL MONITOR
                            DeadCellMonitor                              = cms.untracked.bool(True),
@@ -153,7 +151,10 @@ hcalMonitor = cms.EDFilter("HcalMonitorModule",
                            HotCellMonitor_test_energy                  = cms.untracked.bool(True),
                            HotCellMonitor_test_persistent              = cms.untracked.bool(True),
                            HotCellMonitor_checkNevents                 = cms.untracked.int32(1000),
-                           
+                           HotCellMonitor_checkNevents_pedestal        = cms.untracked.int32(1000),
+                           HotCellMonitor_checkNevents_neighbor        = cms.untracked.int32(1000),
+                           HotCellMonitor_checkNevents_energy          = cms.untracked.int32(1000),
+                           HotCellMonitor_checkNevents_persistent      = cms.untracked.int32(1000),
                            #checking for cells consistently above (ped + Nsigma*width)
                            HotCellMonitor_pedestal_Nsigma              = cms.untracked.double(3.),
                            HotCellMonitor_pedestal_HB_Nsigma           = cms.untracked.double(3.),
@@ -275,12 +276,6 @@ hcalMonitor = cms.EDFilter("HcalMonitorModule",
                            LED_ADC_Thresh = cms.untracked.double(-1000.0),
                            LEDPerChannel = cms.untracked.bool(True),
 
-
-                           #LASER MONITOR
-                           LaserMonitor = cms.untracked.bool(False),
-                           Laser_ADC_Thresh = cms.untracked.double(-1000.0),
-                           LaserPerChannel = cms.untracked.bool(True),
-
                            # SPECIALIZED (EXPERT-USE) MONITORS
 
                             # EXPERT MONITOR (should generally be turned off)
@@ -328,7 +323,6 @@ def setHcalTaskValues(process):
     # set checkNevents
     checkNevents = deepcopy(process.checkNevents)
     process.BeamMonitor_checkNevents                      = checkNevents
-    process.DataFormatMonitor_checkNevents                = checkNevents
     process.DeadCellMonitor_checkNevents                  = checkNevents
     process.DeadCellMonitor_checkNevents_occupancy        = checkNevents
     process.DeadCellMonitor_checkNevents_rechit_occupancy = checkNevents
@@ -337,6 +331,10 @@ def setHcalTaskValues(process):
     process.DeadCellMonitor_checkNevents_energy           = checkNevents
     process.DigiMonitor_checkNevents                      = checkNevents
     process.HotCellMonitor_checkNevents                   = checkNevents
+    process.HotCellMonitor_checkNevents_persistent        = checkNevents
+    process.HotCellMonitor_checkNevents_pedestal          = checkNevents
+    process.HotCellMonitor_checkNevents_neighbor          = checkNevents
+    process.HotCellMonitor_checkNevents_energy            = checkNevents
     process.PedestalMonitor_checkNevents                  = checkNevents
     process.RecHitMonitor_checkNevents                    = checkNevents
     process.TrigPrimMonitor_checkNevents                  = checkNevents
@@ -355,8 +353,6 @@ def setHcalTaskValues(process):
     process.HotCellMonitor_makeDiagnosticPlots  = makeDiagnosticPlots
     process.RecHitMonitor_makeDiagnosticPlots   = makeDiagnosticPlots
     process.TrigPrimMonitor_makeDiagnosticPlots = makeDiagnosticPlots
-    process.PedestalMonitor_makeDiagnosticPlots = makeDiagnosticPlots
-
     return
 
 
