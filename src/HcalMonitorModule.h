@@ -4,8 +4,8 @@
 /*
  * \file HcalMonitorModule.h
  *
- * $Date: 2009/02/11 18:36:29 $
- * $Revision: 1.41 $
+ * $Date: 2009/03/24 15:26:08 $
+ * $Revision: 1.42 $
  * \author W. Fisher
  *
 */
@@ -116,8 +116,8 @@ public:
 			      const HcalElectronicsMap& emap,
 			      const HBHEDigiCollection& hbhedigi,
 			      const HODigiCollection& hodigi,
-			      const HFDigiCollection& hfdigi
-			      //const ZDCDigiCollection& zdcdigi,
+			      const HFDigiCollection& hfdigi,
+			      const ZDCDigiCollection& zdcdigi
 			      );
     
  private:
