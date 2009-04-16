@@ -288,7 +288,7 @@ def setHcalTaskValues(process):
     
     # set pedestalsInFC
     pedestalsInFC = deepcopy(process.pedestalsInFC)
-    process.DeadCellMonitor_pedestalsInFC = pedestalsInFC
+    #process.DeadCellMonitor_pedestalsInFC = pedestalsInFC
     process.HotCellMonitor_pedestalsInFC  = pedestalsInFC
     process.PedestalMonitor_pedestalsInFC = pedestalsInFC
 
@@ -309,62 +309,6 @@ def setHcalSubdetTaskValues(process):
     # Set HB/HE/HO/HF
 
     # Dead Cell Monitor
-    dead_nsigma = deepcopy(process.DeadCellMonitor_pedestal_Nsigma)
-    process.DeadCellMonitor_pedestal_HB_Nsigma           = dead_nsigma
-    process.DeadCellMonitor_pedestal_HE_Nsigma           = dead_nsigma
-    process.DeadCellMonitor_pedestal_HO_Nsigma           = dead_nsigma
-    process.DeadCellMonitor_pedestal_HF_Nsigma           = dead_nsigma
-    process.DeadCellMonitor_pedestal_ZDC_Nsigma          = dead_nsigma
-
-    dead_deltaIeta = deepcopy(process.DeadCellMonitor_neighbor_deltaIeta)
-    process.DeadCellMonitor_HB_neighbor_deltaIeta           = dead_deltaIeta
-    process.DeadCellMonitor_HE_neighbor_deltaIeta           = dead_deltaIeta
-    process.DeadCellMonitor_HO_neighbor_deltaIeta           = dead_deltaIeta
-    process.DeadCellMonitor_HF_neighbor_deltaIeta           = dead_deltaIeta
-    process.DeadCellMonitor_ZDC_neighbor_deltaIeta          = dead_deltaIeta
-    
-    dead_deltaIphi = deepcopy(process.DeadCellMonitor_neighbor_deltaIphi)
-    process.DeadCellMonitor_HB_neighbor_deltaIphi           = dead_deltaIphi
-    process.DeadCellMonitor_HE_neighbor_deltaIphi           = dead_deltaIphi
-    process.DeadCellMonitor_HO_neighbor_deltaIphi           = dead_deltaIphi
-    process.DeadCellMonitor_HF_neighbor_deltaIphi           = dead_deltaIphi
-    process.DeadCellMonitor_ZDC_neighbor_deltaIphi          = dead_deltaIphi
-
-    dead_deltaDepth = deepcopy(process.DeadCellMonitor_neighbor_deltaDepth)
-    process.DeadCellMonitor_HB_neighbor_deltaDepth           = dead_deltaDepth
-    process.DeadCellMonitor_HE_neighbor_deltaDepth           = dead_deltaDepth
-    process.DeadCellMonitor_HO_neighbor_deltaDepth           = dead_deltaDepth
-    process.DeadCellMonitor_HF_neighbor_deltaDepth           = dead_deltaDepth
-    process.DeadCellMonitor_ZDC_neighbor_deltaDepth          = dead_deltaDepth
-
-    dead_maxCellEnergy = deepcopy(process.DeadCellMonitor_neighbor_maxCellEnergy)
-    process.DeadCellMonitor_HB_neighbor_maxCellEnergy           = dead_maxCellEnergy
-    process.DeadCellMonitor_HE_neighbor_maxCellEnergy           = dead_maxCellEnergy
-    process.DeadCellMonitor_HO_neighbor_maxCellEnergy           = dead_maxCellEnergy
-    process.DeadCellMonitor_HF_neighbor_maxCellEnergy           = dead_maxCellEnergy
-    process.DeadCellMonitor_ZDC_neighbor_maxCellEnergy          = dead_maxCellEnergy
-    
-    dead_minNeighborEnergy = deepcopy(process.DeadCellMonitor_neighbor_minNeighborEnergy)
-    process.DeadCellMonitor_HB_neighbor_minNeighborEnergy           = dead_minNeighborEnergy
-    process.DeadCellMonitor_HE_neighbor_minNeighborEnergy           = dead_minNeighborEnergy
-    process.DeadCellMonitor_HO_neighbor_minNeighborEnergy           = dead_minNeighborEnergy
-    process.DeadCellMonitor_HF_neighbor_minNeighborEnergy           = dead_minNeighborEnergy
-    process.DeadCellMonitor_ZDC_neighbor_minNeighborEnergy          = dead_minNeighborEnergy
-
-    dead_minGoodNeighborFrac = deepcopy(process.DeadCellMonitor_neighbor_minGoodNeighborFrac)
-    process.DeadCellMonitor_HB_neighbor_minGoodNeighborFrac           = dead_minGoodNeighborFrac
-    process.DeadCellMonitor_HE_neighbor_minGoodNeighborFrac           = dead_minGoodNeighborFrac
-    process.DeadCellMonitor_HO_neighbor_minGoodNeighborFrac           = dead_minGoodNeighborFrac
-    process.DeadCellMonitor_HF_neighbor_minGoodNeighborFrac           = dead_minGoodNeighborFrac
-    process.DeadCellMonitor_ZDC_neighbor_minGoodNeighborFrac          = dead_minGoodNeighborFrac
-
-    dead_maxEnergyFrac = deepcopy(process.DeadCellMonitor_neighbor_maxEnergyFrac)
-    process.DeadCellMonitor_HB_neighbor_maxEnergyFrac           = dead_maxEnergyFrac
-    process.DeadCellMonitor_HE_neighbor_maxEnergyFrac           = dead_maxEnergyFrac
-    process.DeadCellMonitor_HO_neighbor_maxEnergyFrac           = dead_maxEnergyFrac
-    process.DeadCellMonitor_HF_neighbor_maxEnergyFrac           = dead_maxEnergyFrac
-    process.DeadCellMonitor_ZDC_neighbor_maxEnergyFrac          = dead_maxEnergyFrac
-
     dead_energyThreshold = deepcopy(process.DeadCellMonitor_energyThreshold)
     process.DeadCellMonitor_HB_energyThreshold           = dead_energyThreshold
     process.DeadCellMonitor_HE_energyThreshold           = dead_energyThreshold
