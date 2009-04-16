@@ -130,11 +130,6 @@ process.hcalMonitor.HcalAnalysis        = False
 setHcalTaskValues(process.hcalMonitor)
 
 # Set individual Task values here (otherwise they will remain set to the values specified for the hcalMonitor.)
-process.hcalMonitor.DeadCellMonitor_pedestal_Nsigma     = 0
-process.hcalMonitor.DeadCellMonitor_makeDiagnosticPlots = True
-process.hcalMonitor.DeadCellMonitor_test_pedestal       = True
-process.hcalMonitor.DeadCellMonitor_test_occupancy      = True
-process.hcalMonitor.DeadCellMonitor_test_neighbor       = False
 
 process.hcalMonitor.HotCellMonitor_makeDiagnosticPlots  = True
 process.hcalMonitor.HotCellMonitor_test_neighbor        = True

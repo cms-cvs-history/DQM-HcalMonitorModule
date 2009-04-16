@@ -4,8 +4,8 @@
 /*
  * \file HcalMonitorModule.cc
  * 
- * $Date: 2009/04/03 10:57:53 $
- * $Revision: 1.111 $
+ * $Date: 2009/04/13 14:20:30 $
+ * $Revision: 1.111.4.1 $
  * \author W Fisher
  * \author J Temple
  *
@@ -369,8 +369,8 @@ void HcalMonitorModule::beginJob(const edm::EventSetup& c){
   // Need to repeat this so many times?  Just do it once? And then we can be smarter about the whole fC/ADC thing?
   if (pedMon_!=NULL)
     pedMon_->fillDBValues(*conditions_);
-  if (deadMon_!=NULL)
-    deadMon_->createMaps(*conditions_);
+  //if (deadMon_!=NULL)
+  //  deadMon_->createMaps(*conditions_);
   if (hotMon_!=NULL)
     hotMon_->createMaps(*conditions_);
 
@@ -939,7 +939,8 @@ void HcalMonitorModule::analyze(const edm::Event& e, const edm::EventSetup& even
     {
       //deadMon_->setSubDetectors(HBpresent_,HEpresent_, HOpresent_, HFpresent_);
       deadMon_->processEvent(*hb_hits,*ho_hits,*hf_hits,
-			     *hbhe_digi,*ho_digi,*hf_digi,*conditions_); 
+			     *hbhe_digi,*ho_digi,*hf_digi);
+			     //*conditions_); 
     }
   if (showTiming_)
     {
