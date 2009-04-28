@@ -85,7 +85,7 @@ process.dqmSaver.saveByRun = 1
 #-----------------------------
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 process.GlobalTag.connect = 'frontier://Frontier/CMS_COND_21X_GLOBALTAG'
-process.GlobalTag.globaltag = 'CRAFT_ALL_V8::All'  # update GlobalTag as neceesary
+process.GlobalTag.globaltag = 'CRAFT_ALL_V11::All'  # update GlobalTag as neceesary
 process.prefer("GlobalTag")
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
