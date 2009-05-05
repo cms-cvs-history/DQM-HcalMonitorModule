@@ -4,8 +4,8 @@
 /*
  * \file HcalMonitorModule.cc
  * 
- * $Date: 2009/03/30 11:36:09 $
- * $Revision: 1.102.2.5 $
+ * $Date: 2009/04/03 12:41:09 $
+ * $Revision: 1.102.2.6 $
  * \author W Fisher
  * \author J Temple
  *
@@ -54,6 +54,7 @@ HcalMonitorModule::HcalMonitorModule(const edm::ParameterSet& ps){
   checkHE_=ps.getUntrackedParameter<bool>("checkHE", 1);  
   checkHO_=ps.getUntrackedParameter<bool>("checkHO", 1);  
   checkHF_=ps.getUntrackedParameter<bool>("checkHF", 1);   
+  checkZDC_=ps.getUntrackedParameter<bool>("checkZDC",0);
 
   AnalyzeOrbGapCT_=ps.getUntrackedParameter<bool>("AnalyzeOrbitGap", 0);   
 

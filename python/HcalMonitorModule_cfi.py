@@ -20,7 +20,8 @@ hcalMonitor = cms.EDFilter("HcalMonitorModule",
                            checkHE = cms.untracked.bool(True),
                            checkHB = cms.untracked.bool(True),
                            checkHO = cms.untracked.bool(True),
-
+                           checkZDC = cms.untracked.bool(False),
+                           
                            MonitorDaemon = cms.untracked.bool(True),
                            HcalAnalysis = cms.untracked.bool(False),
                            HotCells = cms.untracked.vstring(),
