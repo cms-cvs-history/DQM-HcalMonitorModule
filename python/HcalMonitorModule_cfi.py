@@ -20,12 +20,11 @@ hcalMonitor = cms.EDFilter("HcalMonitorModule",
                            checkHE = cms.untracked.bool(True),
                            checkHB = cms.untracked.bool(True),
                            checkHO = cms.untracked.bool(True),
-                           checkZDC = cms.untracked.bool(False),
-                           
+                           checkZDC= cms.untracked.bool(False),
                            MonitorDaemon = cms.untracked.bool(True),
                            HcalAnalysis = cms.untracked.bool(False),
                            HotCells = cms.untracked.vstring(),
-                           checkNevents = cms.untracked.int32(2500),
+                           checkNevents = cms.untracked.int32(1000),
 
                            FEDRawDataCollection = cms.untracked.InputTag("source"),
                            
@@ -69,27 +68,18 @@ hcalMonitor = cms.EDFilter("HcalMonitorModule",
                            PedestalMonitor_startingTimeSlice            = cms.untracked.int32(0),
                            PedestalMonitor_endingTimeSlice              = cms.untracked.int32(1),
                            PedestalMonitor_minErrorFlag                 = cms.untracked.double(0.05),
-                           PedestalMonitor_checkNevents                 = cms.untracked.int32(2500),
+                           PedestalMonitor_checkNevents                 = cms.untracked.int32(1000),
                            PedestalMonitor_minEntriesPerPed             = cms.untracked.uint32(100),
                            PedestalMonitor_makeDiagnosticPlots          = cms.untracked.bool(False),
 
                            # DEAD CELL MONITOR
                            DeadCellMonitor                              = cms.untracked.bool(True),
-                           DeadCellMonitor_pedestalsInFC                = cms.untracked.bool(True),
                            DeadCellMonitor_makeDiagnosticPlots          = cms.untracked.bool(False),
+                           DeadCellMonitor_test_neverpresent            = cms.untracked.bool(True),
                            DeadCellMonitor_test_occupancy               = cms.untracked.bool(True),
-                           DeadCellMonitor_test_rechit_occupancy        = cms.untracked.bool(True),
-                           DeadCellMonitor_test_neighbor                = cms.untracked.bool(False), # doesn't give much useful info
-                           DeadCellMonitor_test_pedestal                = cms.untracked.bool(True),
                            DeadCellMonitor_test_energy                  = cms.untracked.bool(True),
-                           DeadCellMonitor_checkNevents                 = cms.untracked.int32(2500),
-                           #checking for cells consistently below (ped + Nsigma*width)
-                           DeadCellMonitor_pedestal_Nsigma              = cms.untracked.double(0.),
-                           DeadCellMonitor_pedestal_HB_Nsigma           = cms.untracked.double(0.),
-                           DeadCellMonitor_pedestal_HE_Nsigma           = cms.untracked.double(0.),
-                           DeadCellMonitor_pedestal_HO_Nsigma           = cms.untracked.double(0.),
-                           DeadCellMonitor_pedestal_HF_Nsigma           = cms.untracked.double(0.),
-                           DeadCellMonitor_pedestal_ZDC_Nsigma          = cms.untracked.double(0.),
+                           DeadCellMonitor_checkNevents                 = cms.untracked.int32(10000),
+                           DeadCellMonitor_neverpresent_prescale        = cms.untracked.int32(10),
                            # Checking for cells consistently below energy threshold
                            DeadCellMonitor_energyThreshold              = cms.untracked.double(-1.),
                            DeadCellMonitor_HB_energyThreshold           = cms.untracked.double(-1.),
@@ -97,46 +87,6 @@ hcalMonitor = cms.EDFilter("HcalMonitorModule",
                            DeadCellMonitor_HO_energyThreshold           = cms.untracked.double(-1.),
                            DeadCellMonitor_HF_energyThreshold           = cms.untracked.double(-1.),
                            DeadCellMonitor_ZDC_energyThreshold          = cms.untracked.double(-999.), # not yet implemented
-                           # Check for cells below their neighbors
-                           DeadCellMonitor_neighbor_deltaIeta           = cms.untracked.int32(1),
-                           DeadCellMonitor_neighbor_deltaIphi           = cms.untracked.int32(1),
-                           DeadCellMonitor_neighbor_deltaDepth          = cms.untracked.int32(4),
-                           DeadCellMonitor_neighbor_maxCellEnergy       = cms.untracked.double(3.),
-                           DeadCellMonitor_neighbor_minNeighborEnergy   = cms.untracked.double(1.),
-                           DeadCellMonitor_neighbor_minGoodNeighborFrac = cms.untracked.double(.7),
-                           DeadCellMonitor_neighbor_maxEnergyFrac       = cms.untracked.double(.2),
-                           # HB neighbor flags
-                           DeadCellMonitor_HB_neighbor_deltaIeta           = cms.untracked.int32(1),
-                           DeadCellMonitor_HB_neighbor_deltaIphi           = cms.untracked.int32(1),
-                           DeadCellMonitor_HB_neighbor_deltaDepth          = cms.untracked.int32(4),
-                           DeadCellMonitor_HB_neighbor_maxCellEnergy       = cms.untracked.double(3.),
-                           DeadCellMonitor_HB_neighbor_minNeighborEnergy   = cms.untracked.double(1.),
-                           DeadCellMonitor_HB_neighbor_minGoodNeighborFrac = cms.untracked.double(.7),
-                           DeadCellMonitor_HB_neighbor_maxEnergyFrac       = cms.untracked.double(.2),
-                           # HE neighbor flags
-                           DeadCellMonitor_HE_neighbor_deltaIeta           = cms.untracked.int32(1),
-                           DeadCellMonitor_HE_neighbor_deltaIphi           = cms.untracked.int32(1),
-                           DeadCellMonitor_HE_neighbor_deltaDepth          = cms.untracked.int32(4),
-                           DeadCellMonitor_HE_neighbor_maxCellEnergy       = cms.untracked.double(3.),
-                           DeadCellMonitor_HE_neighbor_minNeighborEnergy   = cms.untracked.double(1.),
-                           DeadCellMonitor_HE_neighbor_minGoodNeighborFrac = cms.untracked.double(.7),
-                           DeadCellMonitor_HE_neighbor_maxEnergyFrac       = cms.untracked.double(.2),
-                           # HO neighbor flags
-                           DeadCellMonitor_HO_neighbor_deltaIeta           = cms.untracked.int32(1),
-                           DeadCellMonitor_HO_neighbor_deltaIphi           = cms.untracked.int32(1),
-                           DeadCellMonitor_HO_neighbor_deltaDepth          = cms.untracked.int32(4),
-                           DeadCellMonitor_HO_neighbor_maxCellEnergy       = cms.untracked.double(3.),
-                           DeadCellMonitor_HO_neighbor_minNeighborEnergy   = cms.untracked.double(1.),
-                           DeadCellMonitor_HO_neighbor_minGoodNeighborFrac = cms.untracked.double(.7),
-                           DeadCellMonitor_HO_neighbor_maxEnergyFrac       = cms.untracked.double(.2),
-                           # HF neighbor flags
-                           DeadCellMonitor_HF_neighbor_deltaIeta           = cms.untracked.int32(1),
-                           DeadCellMonitor_HF_neighbor_deltaIphi           = cms.untracked.int32(1),
-                           DeadCellMonitor_HF_neighbor_deltaDepth          = cms.untracked.int32(4),
-                           DeadCellMonitor_HF_neighbor_maxCellEnergy       = cms.untracked.double(3.),
-                           DeadCellMonitor_HF_neighbor_minNeighborEnergy   = cms.untracked.double(1.),
-                           DeadCellMonitor_HF_neighbor_minGoodNeighborFrac = cms.untracked.double(.7),
-                           DeadCellMonitor_HF_neighbor_maxEnergyFrac       = cms.untracked.double(.2),
 
                            DeadCellMonitor_minErrorFlag                    = cms.untracked.double(0.05),
                            
@@ -148,7 +98,7 @@ hcalMonitor = cms.EDFilter("HcalMonitorModule",
                            HotCellMonitor_test_pedestal                = cms.untracked.bool(True),
                            HotCellMonitor_test_energy                  = cms.untracked.bool(True),
                            HotCellMonitor_test_persistent              = cms.untracked.bool(True),
-                           HotCellMonitor_checkNevents                 = cms.untracked.int32(2500),
+                           HotCellMonitor_checkNevents                 = cms.untracked.int32(1000),
                            
                            #checking for cells consistently above (ped + Nsigma*width)
                            HotCellMonitor_pedestal_Nsigma              = cms.untracked.double(3.),
@@ -216,7 +166,7 @@ hcalMonitor = cms.EDFilter("HcalMonitorModule",
 
                            # DIGI MONITOR
                            DigiMonitor                                    = cms.untracked.bool(True),
-                           DigiMonitor_checkNevents                       = cms.untracked.int32(2500),
+                           DigiMonitor_checkNevents                       = cms.untracked.int32(1000),
                            DigiMonitor_problems_checkForMissingDigis      = cms.untracked.bool(False), # also checked in DeadCellMonitor, which may be the more appropriate place for the check
                            DigiMonitor_problems_checkCapID                = cms.untracked.bool(True),
                            DigiMonitor_problems_checkDigiSize             = cms.untracked.bool(True),
@@ -232,7 +182,7 @@ hcalMonitor = cms.EDFilter("HcalMonitorModule",
 
                            # RECHIT MONITOR
                            RecHitMonitor                                  = cms.untracked.bool(True),
-                           RecHitMonitor_checkNevents                     = cms.untracked.int32(2500),
+                           RecHitMonitor_checkNevents                     = cms.untracked.int32(1000),
                            RecHitMonitor_minErrorFlag                     = cms.untracked.double(0.),
                            RecHitMonitor_makeDiagnosticPlots              = cms.untracked.bool(False),
                            RecHitMonitor_energyThreshold                  = cms.untracked.double(2.),
@@ -244,25 +194,32 @@ hcalMonitor = cms.EDFilter("HcalMonitorModule",
                            
                            # BEAM MONITOR
                            BeamMonitor                                    = cms.untracked.bool(True),
-                           BeamMonitor_checkNevents                       = cms.untracked.int32(2500),
+                           BeamMonitor_checkNevents                       = cms.untracked.int32(1000),
                            BeamMonitor_minErrorFlag                       = cms.untracked.double(0.),
                            BeamMonitor_makeDiagnosticPlots                = cms.untracked.bool(False),
 
                            # DATA FORMAT MONITOR
                            DataFormatMonitor                              = cms.untracked.bool(True),
-                           DataFormatMonitor_checkNevents                 = cms.untracked.int32(2500),
+                           DataFormatMonitor_checkNevents                 = cms.untracked.int32(1000),
                            dfPrtLvl                                       = cms.untracked.int32(0), # this seems similar to the debug int we have; deprecate this?
+
+                           # ZDC MONITOR
+                           ZDCMonitor                                     = cms.untracked.bool(False),
+                           ZDCMonitor_checkNevents                        = cms.untracked.int32(1000),
+                           ZDCMonitor_deadthresholdrate                   = cms.untracked.double(0.),
+                           
+                           
 
                            # DATA INTEGRITY TASK
                            DataIntegrityTask = cms.untracked.bool(False),
 
                            # TRIG PRIM MONITOR
-                           TrigPrimMonitor = cms.untracked.bool(True),
+                           TrigPrimMonitor = cms.untracked.bool(False),
                            TrigPrimMonitor_OccThresh                      = cms.untracked.double(1.),
                            TrigPrimMonitor_Threshold                      = cms.untracked.double(1.),
                            TrigPrimMonitor_TPdigiTS                       = cms.untracked.int32(1),
                            TrigPrimMonitor_ADCdigiTS                      = cms.untracked.int32(3),
-                           TrigPrimMonitor_checkNevents                   = cms.untracked.int32(2500),
+                           TrigPrimMonitor_checkNevents                   = cms.untracked.int32(1000),
                            TrigPrimMonitor_makeDiagnostics                = cms.untracked.bool(False),
                            gtLabel = cms.InputTag("l1GtUnpack"),
                            
@@ -271,6 +228,12 @@ hcalMonitor = cms.EDFilter("HcalMonitorModule",
                            LED_ADC_Thresh = cms.untracked.double(-1000.0),
                            LEDPerChannel = cms.untracked.bool(True),
 
+
+                           #LASER MONITOR
+                           LaserMonitor = cms.untracked.bool(False),
+                           Laser_ADC_Thresh = cms.untracked.double(-1000.0),
+                           LaserPerChannel = cms.untracked.bool(True),
+
                            # SPECIALIZED (EXPERT-USE) MONITORS
 
                             # EXPERT MONITOR (should generally be turned off)
@@ -278,6 +241,30 @@ hcalMonitor = cms.EDFilter("HcalMonitorModule",
 
                            # Empty Event/Unsuppressed data monitor
                            EEUSMonitor = cms.untracked.bool(False),
+			   
+			   # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #
+                           # Detector diagnostic Monitors  
+                           DetDiagPedestalMonitor = cms.untracked.bool(False),
+                           DetDiagLEDMonitor      = cms.untracked.bool(False),
+                           DetDiagLaserMonitor    = cms.untracked.bool(False),
+                           UseDB                  = cms.untracked.bool(False),
+                           LEDReferenceData       = cms.untracked.string("./"),
+                           PedReferenceData       = cms.untracked.string("./"),
+                           OutputFilePath         = cms.untracked.string("./"),
+                           
+                           LEDDeltaTreshold       = cms.untracked.double(7.0),
+                           LEDRmsTreshold         = cms.untracked.double(5.0),
+
+                           HBMeanPedestalTreshold = cms.untracked.double(0.1),
+                           HBRmsPedestalTreshold  = cms.untracked.double(0.1),
+                           HEMeanPedestalTreshold = cms.untracked.double(0.1),
+                           HERmsPedestalTreshold  = cms.untracked.double(0.1),
+                           HOMeanPedestalTreshold = cms.untracked.double(0.1),
+                           HORmsPedestalTreshold  = cms.untracked.double(0.1),
+                           HFMeanPedestalTreshold = cms.untracked.double(0.1),
+                           HFRmsPedestalTreshold  = cms.untracked.double(0.1),
+                           # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #
+			   
                            # ------------- DEPRECATED/UNUSED MONITORS ----------------------- #
                                                       
                            # CALO TOWER MONITOR
@@ -319,16 +306,25 @@ def setHcalTaskValues(process):
     checkNevents = deepcopy(process.checkNevents)
     process.BeamMonitor_checkNevents                      = checkNevents
     process.DataFormatMonitor_checkNevents                = checkNevents
-    process.DeadCellMonitor_checkNevents                  = checkNevents
+    # How do we convert from int32 to int, so that we can perform division on output?
+    #if (process.DeadCellMonitor_neverpresent_prescale>0):
+    #    process.DeadCellMonitor_checkNevents                  = checkNevents/process.DeadCellMonitor_neverpresent_prescale
+    #    
+    #    print process.DeadCellMonitor_neverpresent_prescale
+    #else:
+    # don't set checkNevents here; deadcellmonitor checkNevents works differently that other values
+    #process.DeadCellMonitor_checkNevents              = checkNevents
+
     process.DigiMonitor_checkNevents                      = checkNevents
     process.HotCellMonitor_checkNevents                   = checkNevents
     process.PedestalMonitor_checkNevents                  = checkNevents
     process.RecHitMonitor_checkNevents                    = checkNevents
     process.TrigPrimMonitor_checkNevents                  = checkNevents
+    process.ZDCMonitor_checkNevents                       = checkNevents
     
     # set pedestalsInFC
     pedestalsInFC = deepcopy(process.pedestalsInFC)
-    process.DeadCellMonitor_pedestalsInFC = pedestalsInFC
+    #process.DeadCellMonitor_pedestalsInFC = pedestalsInFC
     process.HotCellMonitor_pedestalsInFC  = pedestalsInFC
     process.PedestalMonitor_pedestalsInFC = pedestalsInFC
 
@@ -349,62 +345,6 @@ def setHcalSubdetTaskValues(process):
     # Set HB/HE/HO/HF
 
     # Dead Cell Monitor
-    dead_nsigma = deepcopy(process.DeadCellMonitor_pedestal_Nsigma)
-    process.DeadCellMonitor_pedestal_HB_Nsigma           = dead_nsigma
-    process.DeadCellMonitor_pedestal_HE_Nsigma           = dead_nsigma
-    process.DeadCellMonitor_pedestal_HO_Nsigma           = dead_nsigma
-    process.DeadCellMonitor_pedestal_HF_Nsigma           = dead_nsigma
-    process.DeadCellMonitor_pedestal_ZDC_Nsigma          = dead_nsigma
-
-    dead_deltaIeta = deepcopy(process.DeadCellMonitor_neighbor_deltaIeta)
-    process.DeadCellMonitor_HB_neighbor_deltaIeta           = dead_deltaIeta
-    process.DeadCellMonitor_HE_neighbor_deltaIeta           = dead_deltaIeta
-    process.DeadCellMonitor_HO_neighbor_deltaIeta           = dead_deltaIeta
-    process.DeadCellMonitor_HF_neighbor_deltaIeta           = dead_deltaIeta
-    process.DeadCellMonitor_ZDC_neighbor_deltaIeta          = dead_deltaIeta
-    
-    dead_deltaIphi = deepcopy(process.DeadCellMonitor_neighbor_deltaIphi)
-    process.DeadCellMonitor_HB_neighbor_deltaIphi           = dead_deltaIphi
-    process.DeadCellMonitor_HE_neighbor_deltaIphi           = dead_deltaIphi
-    process.DeadCellMonitor_HO_neighbor_deltaIphi           = dead_deltaIphi
-    process.DeadCellMonitor_HF_neighbor_deltaIphi           = dead_deltaIphi
-    process.DeadCellMonitor_ZDC_neighbor_deltaIphi          = dead_deltaIphi
-
-    dead_deltaDepth = deepcopy(process.DeadCellMonitor_neighbor_deltaDepth)
-    process.DeadCellMonitor_HB_neighbor_deltaDepth           = dead_deltaDepth
-    process.DeadCellMonitor_HE_neighbor_deltaDepth           = dead_deltaDepth
-    process.DeadCellMonitor_HO_neighbor_deltaDepth           = dead_deltaDepth
-    process.DeadCellMonitor_HF_neighbor_deltaDepth           = dead_deltaDepth
-    process.DeadCellMonitor_ZDC_neighbor_deltaDepth          = dead_deltaDepth
-
-    dead_maxCellEnergy = deepcopy(process.DeadCellMonitor_neighbor_maxCellEnergy)
-    process.DeadCellMonitor_HB_neighbor_maxCellEnergy           = dead_maxCellEnergy
-    process.DeadCellMonitor_HE_neighbor_maxCellEnergy           = dead_maxCellEnergy
-    process.DeadCellMonitor_HO_neighbor_maxCellEnergy           = dead_maxCellEnergy
-    process.DeadCellMonitor_HF_neighbor_maxCellEnergy           = dead_maxCellEnergy
-    process.DeadCellMonitor_ZDC_neighbor_maxCellEnergy          = dead_maxCellEnergy
-    
-    dead_minNeighborEnergy = deepcopy(process.DeadCellMonitor_neighbor_minNeighborEnergy)
-    process.DeadCellMonitor_HB_neighbor_minNeighborEnergy           = dead_minNeighborEnergy
-    process.DeadCellMonitor_HE_neighbor_minNeighborEnergy           = dead_minNeighborEnergy
-    process.DeadCellMonitor_HO_neighbor_minNeighborEnergy           = dead_minNeighborEnergy
-    process.DeadCellMonitor_HF_neighbor_minNeighborEnergy           = dead_minNeighborEnergy
-    process.DeadCellMonitor_ZDC_neighbor_minNeighborEnergy          = dead_minNeighborEnergy
-
-    dead_minGoodNeighborFrac = deepcopy(process.DeadCellMonitor_neighbor_minGoodNeighborFrac)
-    process.DeadCellMonitor_HB_neighbor_minGoodNeighborFrac           = dead_minGoodNeighborFrac
-    process.DeadCellMonitor_HE_neighbor_minGoodNeighborFrac           = dead_minGoodNeighborFrac
-    process.DeadCellMonitor_HO_neighbor_minGoodNeighborFrac           = dead_minGoodNeighborFrac
-    process.DeadCellMonitor_HF_neighbor_minGoodNeighborFrac           = dead_minGoodNeighborFrac
-    process.DeadCellMonitor_ZDC_neighbor_minGoodNeighborFrac          = dead_minGoodNeighborFrac
-
-    dead_maxEnergyFrac = deepcopy(process.DeadCellMonitor_neighbor_maxEnergyFrac)
-    process.DeadCellMonitor_HB_neighbor_maxEnergyFrac           = dead_maxEnergyFrac
-    process.DeadCellMonitor_HE_neighbor_maxEnergyFrac           = dead_maxEnergyFrac
-    process.DeadCellMonitor_HO_neighbor_maxEnergyFrac           = dead_maxEnergyFrac
-    process.DeadCellMonitor_HF_neighbor_maxEnergyFrac           = dead_maxEnergyFrac
-    process.DeadCellMonitor_ZDC_neighbor_maxEnergyFrac          = dead_maxEnergyFrac
-
     dead_energyThreshold = deepcopy(process.DeadCellMonitor_energyThreshold)
     process.DeadCellMonitor_HB_energyThreshold           = dead_energyThreshold
     process.DeadCellMonitor_HE_energyThreshold           = dead_energyThreshold

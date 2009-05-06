@@ -4,8 +4,9 @@
 /*
  * \file HcalMonitorModule.h
  *
- * $Date: 2009/03/02 09:36:50 $
- * $Revision: 1.39.2.2 $
+
+ * $Date: 2009/05/01 18:46:40 $
+ * $Revision: 1.45 $
  * \author W. Fisher
  *
 */
@@ -35,7 +36,6 @@
 #include "DataFormats/L1GlobalTrigger/interface/L1GlobalTriggerReadoutRecord.h"
 #include "DataFormats/L1GlobalTrigger/interface/L1GlobalTriggerReadoutSetupFwd.h"
 #include "CalibCalorimetry/HcalAlgos/interface/HcalDbASCIIIO.h"
-
 #include "DataFormats/DetId/interface/DetId.h"
 #include "DataFormats/HcalDetId/interface/HcalDetId.h"
 #include "DQM/HcalMonitorModule/interface/HcalMonitorSelector.h"
@@ -53,9 +53,17 @@
 #include "DQM/HcalMonitorTasks/interface/HcalDeadCellMonitor.h"
 #include "DQM/HcalMonitorTasks/interface/HcalCaloTowerMonitor.h"
 #include "DQM/HcalMonitorTasks/interface/HcalTrigPrimMonitor.h"
+#include "DQM/HcalMonitorTasks/interface/HcalZDCMonitor.h"
+
 #include "DQM/HcalMonitorTasks/interface/HcalTemplateAnalysis.h"
 #include "DQM/HcalMonitorTasks/interface/HcalEEUSMonitor.h"
 #include "TBDataFormats/HcalTBObjects/interface/HcalTBRunData.h"
+
+////////////////////////////////////////////////////////////////
+#include "DQM/HcalMonitorTasks/interface/HcalDetDiagPedestalMonitor.h"
+#include "DQM/HcalMonitorTasks/interface/HcalDetDiagLEDMonitor.h"
+#include "DQM/HcalMonitorTasks/interface/HcalDetDiagLaserMonitor.h"
+////////////////////////////////////////////////////////////////
 
 // Use to hold/get channel status
 #include "CondFormats/HcalObjects/interface/HcalChannelQuality.h"
@@ -117,8 +125,8 @@ public:
 			      const HcalElectronicsMap& emap,
 			      const HBHEDigiCollection& hbhedigi,
 			      const HODigiCollection& hodigi,
-			      const HFDigiCollection& hfdigi
-			      //const ZDCDigiCollection& zdcdigi,
+			      const HFDigiCollection& hfdigi,
+			      const ZDCDigiCollection& zdcdigi
 			      );
     
  private:
@@ -211,8 +219,15 @@ public:
   HcalDeadCellMonitor*    deadMon_;
   HcalCaloTowerMonitor*   ctMon_;
   HcalTrigPrimMonitor*    tpMon_;
+  HcalZDCMonitor*         zdcMon_;
+
   HcalTemplateAnalysis*   tempAnalysis_;
   HcalEEUSMonitor*        eeusMon_;
+  ////////////////////////////////////////////
+  HcalDetDiagPedestalMonitor   *detDiagPed_;
+  HcalDetDiagLEDMonitor        *detDiagLed_;
+  HcalDetDiagLaserMonitor      *detDiagLas_;
+  ////////////////////////////////////////////
 
   edm::ESHandle<HcalDbService> conditions_;
   const HcalElectronicsMap*    readoutMap_;
