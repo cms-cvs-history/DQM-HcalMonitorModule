@@ -91,13 +91,10 @@ process.dqmSaver.saveByRun = 1
 #process.GlobalTag.connect = 'frontier://Frontier/CMS_COND_21X_GLOBALTAG'
 
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
-#process.GlobalTag.globaltag = "CRAFT_31X::All"
-process.GlobalTag.globaltag = "GR09_31X::All"
-
+process.GlobalTag.globaltag = "CRAFT_31X::All"
 process.es_prefer_GlobalTag = cms.ESPrefer('PoolDBESSource','GlobalTag')
-
-
 process.prefer("GlobalTag")
+
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 # Tone down the logging messages, MessageLogger!
