@@ -26,9 +26,9 @@ process.source = cms.Source("PoolSource",
                             fileNames = cms.untracked.vstring
                             (
     # recent cosmics run with known hot cell in HF
-        '/store/data/Commissioning08/Cosmics/RAW/v1/000/067/838/006945C8-40A5-DD11-BD7E-001617DBD556.root',
+    #'/store/data/Commissioning08/Cosmics/RAW/v1/000/067/838/006945C8-40A5-DD11-BD7E-001617DBD556.root',
     # NON-ZERO-SUPPRESSED RUN
-    #'/store/data/Commissioning08/Cosmics/RAW/v1/000/064/103/2A983512-E18F-DD11-BE84-001617E30CA4.root'
+    '/store/data/Commissioning08/Cosmics/RAW/v1/000/064/103/2A983512-E18F-DD11-BE84-001617E30CA4.root'
     #'/store/data/Commissioning08/Cosmics/RAW/v1/000/066/904/02944F1F-EB9E-DD11-8D88-001D09F2A465.root',
     # ZERO-SUPPRESSED RUN
     #'/store/data/Commissioning08/Cosmics/RAW/v1/000/064/042/0A36AA7D-978F-DD11-BA36-000423D6C8E6.root'
@@ -91,7 +91,9 @@ process.dqmSaver.saveByRun = 1
 #process.GlobalTag.connect = 'frontier://Frontier/CMS_COND_21X_GLOBALTAG'
 
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
-process.GlobalTag.globaltag = "CRAFT_30X::All"
+#process.GlobalTag.globaltag = "CRAFT_31X::All"
+process.GlobalTag.globaltag = "GR09_31X::All"
+
 process.es_prefer_GlobalTag = cms.ESPrefer('PoolDBESSource','GlobalTag')
 
 
@@ -113,7 +115,6 @@ process.load("RecoLocalCalo.HcalRecProducers.HcalSimpleReconstructor_zdc_cfi")
 
 # hcalMonitor configurable values -----------------------
 process.hcalMonitor.debug = 0
-#process.hcalMonitor.DigiOccThresh = -999999999 ##Temporary measure while DigiOcc is reworked -- why was this done in the first place?  What was the problem with a threshold of 0?  -- Jeff. Yes, forgive me, I was young. -- Jason.
 process.hcalMonitor.pedestalsInFC   = True
 process.hcalMonitor.showTiming      = False
 process.hcalMonitor.checkNevents    = checkNevents
@@ -139,14 +140,6 @@ process.hcalMonitor.HcalAnalysis        = False
 setHcalTaskValues(process.hcalMonitor)
 
 # Set individual Task values here (otherwise they will remain set to the values specified for the hcalMonitor.)
-process.hcalMonitor.DeadCellMonitor_pedestal_Nsigma     = 0
-process.hcalMonitor.DeadCellMonitor_makeDiagnosticPlots = True
-process.hcalMonitor.DeadCellMonitor_test_pedestal       = True
-process.hcalMonitor.DeadCellMonitor_test_occupancy      = True
-process.hcalMonitor.DeadCellMonitor_test_neighbor       = False
-
-process.hcalMonitor.HotCellMonitor_makeDiagnosticPlots  = True
-process.hcalMonitor.HotCellMonitor_test_neighbor        = True
 
 #-----------------------------
 # Hcal DQM Client
@@ -172,7 +165,16 @@ process.options = cms.untracked.PSet(
         'TooManyProducts', 
         'TooFewProducts')
 )
-process.p = cms.Path(process.hcalDigis*process.horeco*process.hfreco*process.hbhereco*process.zdcreco*process.hcalMonitor*process.hcalClient*process.dqmEnv*process.dqmSaver)
+process.p = cms.Path(process.hcalDigis
+                     *process.horeco
+                     *process.hfreco
+                     *process.hbhereco
+                     *process.zdcreco
+                     *process.hcalMonitor
+                     *process.hcalClient
+                     *process.dqmEnv
+                     *process.dqmSaver
+                     )
 
 #-----------------------------
 # Quality Tester 
