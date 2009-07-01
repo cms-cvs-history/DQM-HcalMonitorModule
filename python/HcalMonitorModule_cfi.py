@@ -250,6 +250,7 @@ hcalMonitor = cms.EDFilter("HcalMonitorModule",
                            UseDB                  = cms.untracked.bool(False),
                            LEDReferenceData       = cms.untracked.string("./"),
                            PedReferenceData       = cms.untracked.string("./"),
+			   LaserReferenceData     = cms.untracked.string("./"),
                            OutputFilePath         = cms.untracked.string("./"),
                            
                            LEDDeltaTreshold       = cms.untracked.double(7.0),
