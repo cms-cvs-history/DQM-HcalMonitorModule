@@ -100,8 +100,8 @@ process.dqmSaver.saveByRun = 1
 # Hcal Conditions: from Global Conditions Tag 
 #-----------------------------
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
-process.GlobalTag.connect = 'frontier://Frontier/CMS_COND_21X_GLOBALTAG'
-process.GlobalTag.globaltag = 'CRAFT_V3P::All'  # update GlobalTag as neceesary
+process.GlobalTag.globaltag = "CRAFT_31X::All"
+process.es_prefer_GlobalTag = cms.ESPrefer('PoolDBESSource','GlobalTag')
 process.prefer("GlobalTag")
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
@@ -122,7 +122,7 @@ process.hcalMonitor.debug = 0
 
 process.hcalMonitor.pedestalsInFC = True
 process.hcalMonitor.showTiming = False
-process.hcalMonitor.checkNevents=100
+process.hcalMonitor.checkNevents=1000
 process.hcalMonitor.dump2database = False
 
 # Turn on/off individual hcalMonitor modules ------------
