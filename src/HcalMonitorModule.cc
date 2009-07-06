@@ -4,13 +4,8 @@
 /*
  * \file HcalMonitorModule.cc
  * 
-<<<<<<< HcalMonitorModule.cc
- * $Date: 2009/05/06 12:13:19 $
- * $Revision: 1.102.2.8 $
-=======
- * $Date: 2009/05/06 12:13:19 $
- * $Revision: 1.102.2.8 $
->>>>>>> 1.111.4.2
+ * $Date: 2009/06/24 15:00:36 $
+ * $Revision: 1.102.2.9 $
  * \author W Fisher
  * \author J Temple
  *
