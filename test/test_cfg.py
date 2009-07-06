@@ -10,7 +10,7 @@ process = cms.Process("HCALDQM")
 #####################  SET THE NUMBER OF EVENTS OVER WHICH TO RUN HERE #################################
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(500)
+    input = cms.untracked.int32(10)
     )
 
 ##################### SET YOUR FILE TO CHECK HERE #####################################################
@@ -21,30 +21,11 @@ process.source = cms.Source("PoolSource",
                             
                             fileNames = cms.untracked.vstring
                             (
-    # Test -- claim that there is noise in HB around phi=70?
-    #'/store/data/Commissioning08/Cosmics/RAW/v1/000/068/000/08E115E1-D1A5-DD11-BCE7-000423D99AA2.root',
-    #'/store/data/Commissioning08/Cosmics/RAW/v1/000/068/000/184F395C-CEA5-DD11-A2E2-000423D60FF6.root',
-    #'/store/data/Commissioning08/Cosmics/RAW/v1/000/068/000/18D42E5A-DDA5-DD11-B0AB-001617C3B778.root',
-    #'/store/data/Commissioning08/Cosmics/RAW/v1/000/068/000/1E6AA65A-CEA5-DD11-89F4-001617C3B6FE.root',
-    #'/store/data/Commissioning08/Cosmics/RAW/v1/000/068/000/2AB5D440-D1A5-DD11-918D-001617E30CD4.root',
-    #'/store/data/Commissioning08/Cosmics/RAW/v1/000/068/000/2CDF3B0F-CFA5-DD11-AE18-000423D99A8E.root',
-    #'/store/data/Commissioning08/Cosmics/RAW/v1/000/068/000/38419E41-D1A5-DD11-8B68-001617C3B6E2.root',
-    #'/store/data/Commissioning08/Cosmics/RAW/v1/000/068/000/708C5612-CFA5-DD11-AD52-0019DB29C5FC.root',
-    #'/store/data/Commissioning08/Cosmics/RAW/v1/000/068/000/84204A5E-CEA5-DD11-8821-000423D99614.root',
-    #'/store/data/Commissioning08/Cosmics/RAW/v1/000/068/000/9E77EF30-D1A5-DD11-83AF-000423D94C68.root',
-    #'/store/data/Commissioning08/Cosmics/RAW/v1/000/068/000/A44C0AE0-D1A5-DD11-BEC7-001617C3B65A.root',
-    #'/store/data/Commissioning08/Cosmics/RAW/v1/000/068/000/A455EEC2-CFA5-DD11-A5FD-000423D94534.root',
-    #'/store/data/Commissioning08/Cosmics/RAW/v1/000/068/000/A88C89CE-CFA5-DD11-A3FD-000423D952C0.root',
-    #'/store/data/Commissioning08/Cosmics/RAW/v1/000/068/000/B01DD909-CFA5-DD11-876F-001617E30F4C.root',
-    #'/store/data/Commissioning08/Cosmics/RAW/v1/000/068/000/CA59E7A6-D2A5-DD11-B2E5-001617DF785A.root',
-    #'/store/data/Commissioning08/Cosmics/RAW/v1/000/068/000/CA89A8C7-CFA5-DD11-ADFE-000423D985B0.root',
-    #'/store/data/Commissioning08/Cosmics/RAW/v1/000/068/000/E01CA6C6-CFA5-DD11-87CE-000423D60FF6.root',
-    #'/store/data/Commissioning08/Cosmics/RAW/v1/000/068/000/E4E9FEF9-D1A5-DD11-A6AE-001617C3B6C6.root',
-
-    
 
     #'/store/data/Commissioning08/Cosmics/RAW/v1/000/070/484/C2869114-23AF-DD11-851F-000423D98FBC.root',
-     
+    #'/store/data/Commissioning08/Cosmics/RAW/v1/000/068/500/FE870F04-EDA8-DD11-8524-000423D98E30.root'
+
+
     # Andreas' test of reportsummary
     #'/store/data/Commissioning08/Cosmics/RAW/CRUZET4_v1/000/058/555/02E4041E-1571-DD11-98CE-001D09F241B9.root',
     #'/store/data/Commissioning08/Cosmics/RAW/v1/000/070/195/00766F08-1BAE-DD11-8CE5-001617DBD5B2.root',
@@ -119,8 +100,8 @@ process.dqmSaver.saveByRun = 1
 # Hcal Conditions: from Global Conditions Tag 
 #-----------------------------
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
-process.GlobalTag.connect = 'frontier://Frontier/CMS_COND_21X_GLOBALTAG'
-process.GlobalTag.globaltag = 'CRAFT_V3P::All'  # update GlobalTag as neceesary
+process.GlobalTag.globaltag = "CRAFT_31X::All"
+process.es_prefer_GlobalTag = cms.ESPrefer('PoolDBESSource','GlobalTag')
 process.prefer("GlobalTag")
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
@@ -138,22 +119,22 @@ process.load("RecoLocalCalo.HcalRecProducers.HcalSimpleReconstructor_zdc_cfi")
 
 # hcalMonitor configurable values -----------------------
 process.hcalMonitor.debug = 0
-#process.hcalMonitor.DigiOccThresh = -999999999 ##Temporary measure while DigiOcc is reworked.
+
 process.hcalMonitor.pedestalsInFC = True
 process.hcalMonitor.showTiming = False
-process.hcalMonitor.checkNevents=500
+process.hcalMonitor.checkNevents=1000
 process.hcalMonitor.dump2database = False
 
 # Turn on/off individual hcalMonitor modules ------------
-process.hcalMonitor.DataFormatMonitor   = True
+process.hcalMonitor.DataFormatMonitor   = False
 process.hcalMonitor.DataIntegrityTask   = False
-process.hcalMonitor.DigiMonitor         = True
-process.hcalMonitor.RecHitMonitor       = True
+process.hcalMonitor.DigiMonitor         = False
+process.hcalMonitor.RecHitMonitor       = False
 process.hcalMonitor.TrigPrimMonitor     = False
-process.hcalMonitor.DeadCellMonitor     = True
+process.hcalMonitor.DeadCellMonitor     = False
 process.hcalMonitor.HotCellMonitor      = True
 process.hcalMonitor.BeamMonitor         = False
-process.hcalMonitor.PedestalMonitor     = True
+process.hcalMonitor.PedestalMonitor     = False
 process.hcalMonitor.LEDMonitor          = False
 process.hcalMonitor.CaloTowerMonitor    = False
 process.hcalMonitor.MTCCMonitor         = False
@@ -186,7 +167,7 @@ process.load("DQM.HcalMonitorClient.HcalMonitorClient_cfi")
 
 # hcalClient configurable values ------------------------
 # suppresses html output from HCalClient  
-process.hcalClient.baseHtmlDir = '/tmp/temple'  # set to '' to ignore html output
+process.hcalClient.baseHtmlDir = ''  # set to '' to ignore html output
 
 # Set client settings to the same as monitor.  At the moment, this doesn't affect client minErrorFlag
 # Summary Client is also unaffected
@@ -207,7 +188,9 @@ process.options = cms.untracked.PSet(
         'TooFewProducts')
 )
 
-process.p = cms.Path(process.hcalDigis*process.horeco*process.hfreco*process.hbhereco*process.zdcreco*process.hcalMonitor*process.hcalClient*process.dqmEnv*process.dqmSaver)
+process.p = cms.Path(process.hcalDigis*process.horeco*process.hfreco*process.hbhereco*process.zdcreco*process.hcalMonitor
+                     *process.hcalClient
+                     *process.dqmEnv*process.dqmSaver)
 
 
 #-----------------------------
