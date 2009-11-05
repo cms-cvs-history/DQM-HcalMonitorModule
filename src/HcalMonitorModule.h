@@ -5,8 +5,8 @@
  * \file HcalMonitorModule.h
  *
 
- * $Date: 2009/08/06 11:22:17 $
- * $Revision: 1.48 $
+ * $Date: 2009/08/09 12:46:36 $
+ * $Revision: 1.49 $
  * \author W. Fisher
  *
 */
@@ -97,7 +97,7 @@ public:
   void analyze(const edm::Event& e, const edm::EventSetup& c);
   
   // BeginJob
-  void beginJob(const edm::EventSetup& c);
+  void beginJob();
   
   // BeginRun
   void beginRun(const edm::Run& run, const edm::EventSetup& c);
