@@ -1,6 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
-hcalMonitor=cms.EDAnalyzer("NewHcalMonitorModule",
+hcalMonitor=cms.EDAnalyzer("HcalMonitorModule",
                            debug=cms.int32(0),
                            online=cms.bool(False),
                            #AllowedCalibTypes=cms.vint32(),
