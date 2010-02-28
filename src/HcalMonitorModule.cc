@@ -3,8 +3,8 @@
 /*
  * \file HcalMonitorModule.cc
  *
- * $Date: 2010/02/18 20:36:28 $
- * $Revision: 1.00 $
+ * $Date: 2010/02/25 13:41:07 $
+ * $Revision: 1.162.2.1 $
  * \author J Temple
  *
  * New version of HcalMonitorModule stores only a few necessary variables that other tasks need to grab
@@ -64,6 +64,7 @@ void HcalMonitorModule::beginJob(void)
   meCalibType_=0;
   meFEDS_=0;
   meIevt_=0;
+  meIevtHist_=0;
   meProcessedEndLumi_=0;
   meHB_=0;
   meHE_=0;
@@ -108,6 +109,7 @@ void HcalMonitorModule::reset(void)
   if (meCalibType_) meCalibType_->Reset();
   if (meFEDS_) meFEDS_->Reset();
   if (meIevt_) meIevt_->Fill(0);
+  if (meIevtHist_) meIevtHist_->Reset();
   ievt_=0;
   if (meProcessedEndLumi_) meProcessedEndLumi_->Fill(-1);
   if (meHB_) meHB_->Fill(-1);
@@ -137,6 +139,8 @@ void HcalMonitorModule::setup(void)
       if (meEvt_) meEvt_->Fill(-1);
       meIevt_ = dbe_->bookInt("EventsProcessed");
       if (meIevt_) meIevt_->Fill(-1);
+      meIevtHist_ = dbe_->book1D("EventsInHcalMonitorModule","Events Seen by HcalMonitorModule",1,0.5,1.5);
+      meIevtHist_->setBinLabel(1,"Nevents",1);
       meOnline_ = dbe_->bookInt("Online");
       meOnline_->Fill((int)Online_);
       meProcessedEndLumi_ = dbe_->bookInt("EndLumiBlock_MonitorModule");
@@ -187,6 +191,9 @@ void HcalMonitorModule::cleanup(void)
       if (meIevt_) 
 	dbe_->removeElement(meIevt_->getName());
       meIevt_=0;
+      if (meIevtHist_)
+	dbe_->removeElement(meIevtHist_->getName());
+      meIevtHist_=0;
       if (meFEDS_) 
 	dbe_->removeElement(meFEDS_->getName());
       meFEDS_ = 0;
@@ -273,6 +280,7 @@ void HcalMonitorModule::analyze(const Event& e, const EventSetup& c)
   if (meRun_) meRun_->Fill(runNumber_);
   if (meEvt_) meEvt_->Fill(evtNumber_);
   if (meIevt_) meIevt_->Fill(ievt_);
+  if (meIevtHist_) meIevtHist_->Fill(1);
   if (ievt_==1)
     {
       LogDebug("HcalMonitorModule") << "processing run " << runNumber_;

@@ -5,8 +5,8 @@
  * \file HcalMonitorModule.h
  *
 
- * $Date: 2010/02/18 20:36:30 $
- * $Revision: 1.00 $
+ * $Date: 2010/02/25 13:34:29 $
+ * $Revision: 1.7.2.2 $
  * \author J. Temple
  *
 */
@@ -121,6 +121,7 @@ public:
   MonitorElement* meHO_;
   MonitorElement* meHF_;
   MonitorElement* meIevt_;
+  MonitorElement* meIevtHist_; 
   MonitorElement* meProcessedEndLumi_;
   MonitorElement* meOnline_;
 
