@@ -2,24 +2,24 @@ import FWCore.ParameterSet.Config as cms
 import os
 import string
 
-from DQM.HcalMonitorModule.HcalMonitorModule_cfi import * # need for setHcalTaskValues, setHcalSubdetTaskValues functions
-from DQM.HcalMonitorClient.HcalMonitorClient_cfi import * 
-
 process = cms.Process("HCALDQM")
 
 #------------------------------------------------------
 #  variables used in multiple places
 #-----------------------------------------------------                      
 
-maxevents      = 1000    # maximum number of events to process
-checkNevents   = 1000    # some histograms are filled 'every checkNevents' events; others are filled every luminosity block or every event
-debuglevel     = 0      # larger value means more debug messages (0=no debug)
+maxevents      = 100  # maximum number of events to process
+debuglevel     = 0     # larger value means more debug messages (0=no debug)
 databasedir  = ''       # Set to an existing directory to dump out database info
 host = os.getenv("HOST")
-host=string.split(host,".")[0]
-
+if (host.find(".")>-1):
+    host=string.split(host,".")[0]
+else:
+    host=None
+    
 subsystem="Hcal"        # specify subsystem name  (default is "Hcal")
 source = "PoolSource"   # specify source type (PoolSource, NewEventStreamFileReader, HcalTBSource)
+source="NewEventStreamFileReader"
 memcheck=False          # Dump out memory usage information
 
 #----------------------------
@@ -41,6 +41,10 @@ if source=="PoolSource":
                                 
                                 fileNames = cms.untracked.vstring
                                 (
+        
+        
+        #'/store/express/Commissioning10/StreamExpress/ALCARECO/v3/000/128/298/D02B9B9E-631C-DF11-8590-000423D986C4.root',
+        #'/store/express/Commissioning10/OfflineMonitor/FEVTHLTALL/v3/000/128/298/0C0F63C7-621C-DF11-9592-000423D6B48C.root',
         # Run with ZDC
         '/store/data/BeamCommissioning09/Cosmics/RAW/v1/000/121/993/D04EA868-5FD6-DE11-B372-003048D2BE08.root',
 
@@ -65,15 +69,23 @@ if source=="PoolSource":
 elif source=="NewEventStreamFileReader":
     process.source = cms.Source("NewEventStreamFileReader",
                                 fileNames = cms.untracked.vstring(
-        #'/store/data/GlobalCruzet3MW33/A/000/056/416/GlobalCruzet3MW33.00056416.0001.A.storageManager.0.0000.dat'
-        # example file from online (cmsusr0) directory (lookarea_SM)
-        #'file:/lookarea_SM/MWGR_40_2009.00116136.0036.A.storageManager.07.0000.dat',
-        #'/store/streamer/RunPrep09/A/000/120/325/RunPrep09.00120325.0002.A.storageManager.06.0001.dat',
-        #'/store/streamer/RunPrep09/A/000/120/331/RunPrep09.00120331.0196.A.storageManager.04.0000.dat'
-        #Francesco's check
-        '/store/streamer/RunPrep09/A/000/120/331/RunPrep09.00120331.0060.A.storageManager.00.0000.dat',
-        #'/store/streamer/RunPrep09/A/000/120/331/RunPrep09.00120331.0060.A.storageManager.01.0000.dat',
-        '/store/streamer/RunPrep09/A/000/120/331/RunPrep09.00120331.0197.A.storageManager.07.0000.dat'
+
+'file:/tmp/temple/inputfiles/Data.00128766.0001.A.storageManager.00.0000.dat',
+'file:/tmp/temple/inputfiles/Data.00128766.0021.A.storageManager.01.0000.dat',
+'file:/tmp/temple/inputfiles/Data.00128766.0041.A.storageManager.02.0000.dat',
+'file:/tmp/temple/inputfiles/Data.00128766.0061.A.storageManager.03.0000.dat',
+'file:/tmp/temple/inputfiles/Data.00128766.0081.A.storageManager.04.0000.dat',
+'file:/tmp/temple/inputfiles/Data.00128766.0101.A.storageManager.05.0000.dat',
+'file:/tmp/temple/inputfiles/Data.00128766.0121.A.storageManager.06.0000.dat',
+'file:/tmp/temple/inputfiles/Data.00128766.0141.A.storageManager.07.0000.dat',
+'file:/tmp/temple/inputfiles/Data.00128766.0161.A.storageManager.08.0000.dat',
+'file:/tmp/temple/inputfiles/Data.00128766.0181.A.storageManager.09.0000.dat',
+'file:/tmp/temple/inputfiles/Data.00128766.0201.A.storageManager.10.0000.dat',
+'file:/tmp/temple/inputfiles/Data.00128766.0221.A.storageManager.11.0000.dat',
+'file:/tmp/temple/inputfiles/Data.00128766.0241.A.storageManager.12.0000.dat',
+'file:/tmp/temple/inputfiles/Data.00128766.0261.A.storageManager.13.0000.dat',
+'file:/tmp/temple/inputfiles/Data.00128766.0281.A.storageManager.14.0000.dat',
+
         )
                                 )
 
@@ -102,8 +114,8 @@ elif source=="HcalTBSource":
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 # Reduce frequency of MessageLogger event output messages
-process.MessageLogger.cerr.FwkReport.reportEvery = 100
-
+process.MessageLogger.cerr.FwkReport.reportEvery = 200
+#process.MessageLogger.cerr.FwkReport.reportEvery = 1
 
 #----------------------------
 # DQM Environment
@@ -112,11 +124,13 @@ process.load("DQMServices.Core.DQM_cfg")
 process.load("DQMServices.Components.DQMEnvironment_cfi")
 
 # Set collector host to machine where gui output to be collected
-#process.DQM.collectorHost = 'lxplus249'
-#process.DQM.collectorHost = host
-#process.DQM.collectorPort = 9190
+process.DQM.collectorHost = 'lxplus305'
+if (host<>None):
+    process.DQM.collectorHost = host
+process.DQM.collectorPort = 9190
 process.dqmSaver.convention = 'Online'
 process.dqmSaver.producer = 'DQM'
+process.dqmSaver.dirName="/tmp/temple/dqmdata/"
 process.dqmEnv.subSystemFolder = subsystem
 # optionally change fileSaving  conditions
 # replace dqmSaver.prescaleLS =   -1
@@ -160,7 +174,7 @@ process.prefer("GlobalTag")
 
 
 #Igprof -- run with:
-'''
+'''process.hcalMonitorTasksOnlineSequence
 igprof -d -t cmsRun -pp -mp -z -o igprof.myprof.gz cmsRun \
 hcal_dqm_sourceclient-file_cfg.py > & out.myprof.txt < /dev/null &
 '''
@@ -181,33 +195,25 @@ if (memcheck):
 # Hcal DQM Source, including HitReconstrctor
 #---------------------------------------------
 
-# AT LAST!  Load the DQM HcalMonitorModule!
-process.load("DQM.HcalMonitorModule.HcalMonitorModule_cfi")
-process.load("DQM.HcalMonitorModule.ZDCMonitorModule_cfi")
 process.load("EventFilter.HcalRawToDigi.HcalRawToDigi_cfi")
 
-# This is a separate process to create a special collection of digis in which
-# problem digis aren't rejected from the collection.  Casual users do not need to worry about this.
-process.hcalAllDigis = cms.EDFilter("HcalRawToDigi",
-                                    # Flag to enable unpacking of ZDC channels (default = false)
-                                    UnpackZDC = cms.untracked.bool(True),
-                                    # Optional filter to remove any digi with "data valid" off, "error" on,
-                                    # or capids not rotating
-                                    FilterDataQuality = cms.bool(False),
-                                    # Do not complain about missing FEDs
-                                    ExceptionEmptyData = cms.untracked.bool(False),
-                                    InputLabel = cms.InputTag("source"),
-                                    # Use the defaults for FED numbers
-                                    # Do not complain about missing FEDs
-                                    ComplainEmptyData = cms.untracked.bool(False),
-                                    # Flag to enable unpacking of calibration channels (default = false)
-                                    UnpackCalib = cms.untracked.bool(True),
-                                    lastSample = cms.int32(9),
-                                    # At most ten samples can be put into a digi, if there are more
-                                    # than ten, firstSample and lastSample select which samples
-                                    # will be copied to the digi
-                                    firstSample = cms.int32(0)
-                                    )
+# AT LAST!  Load the DQM HcalMonitorModule!
+process.load("DQM.HcalMonitorModule.HcalMonitorModule_cfi")
+process.load("DQM.HcalMonitorTasks.HcalMonitorTasks_cfi")
+process.load("DQM.HcalMonitorClient.NewHcalMonitorClient_cfi")
+
+process.hcalNZSMonitor.debug=0
+process.hcalBeamMonitor.debug=0
+process.hcalBeamMonitor.lumiqualitydir="/tmp/temple/dqmdata"
+process.hcalBeamMonitor.online=True
+process.hcalMonitor.online=True
+process.hcalDeadCellMonitor.online=True
+process.hcalHotCellMonitor.online=True
+process.hcalDigiMonitor.online=True
+process.hcalNZSMonitor.online=True
+process.hcalRecHitMonitor.online=True
+process.newHcalClient.debug=10
+process.newHcalClient.baseHtmlDir="/tmp/temple"
 
 process.load("RecoLocalCalo.HcalRecProducers.HcalHitReconstructor_hbhe_cfi")
 process.load("RecoLocalCalo.HcalRecProducers.HcalHitReconstructor_ho_cfi")
@@ -270,84 +276,6 @@ process.valHcalTriggerPrimitiveDigis.inputLabel = cms.VInputTag('hcalDigis', 'hc
 process.valHcalTriggerPrimitiveDigis.FrontEndFormatError = cms.untracked.bool(True)
 process.HcalTPGCoderULUT.LUTGenerationMode = cms.bool(False)
 
-
-# -------------------------------
-# hcalMonitor configurable values
-# -------------------------------
-process.hcalMonitor.debug = debuglevel
-process.hcalMonitor.Online = True # set true for online/local running
-
-process.hcalMonitor.showTiming      = False
-process.hcalMonitor.checkNevents    = checkNevents
-#process.hcalMonitor.DeadCellMonitor_test_rechits = True
-
-#--------------------------------------------
-# Turn on/off individual hcalMonitor modules
-#--------------------------------------------
-process.hcalMonitor.subSystemFolder = subsystem
-
-process.hcalMonitor.DataFormatMonitor             = True
-process.hcalMonitor.DigiMonitor                   = True
-process.hcalMonitor.RecHitMonitor                 = True
-process.hcalMonitor.TrigPrimMonitor               = True
-process.hcalMonitor.DeadCellMonitor               = True
-process.hcalMonitor.HotCellMonitor                = True
-process.hcalMonitor.BeamMonitor                   = True
-process.hcalMonitor.ReferencePedestalMonitor      = True
-process.hcalMonitor.LaserMonitor                  = True
-process.hcalMonitor.NZSMonitor                    = True
-
-process.hcalMonitor.DetDiagNoiseMonitor           = False
-process.hcalMonitor.DetDiagTimingMonitor          = False
-process.hcalMonitor.DetDiagLEDMonitor             = False
-process.hcalMonitor.DetDiagLaserMonitor           = False
-process.hcalMonitor.DetDiagPedestalMonitor        = False
-
-process.hcalMonitor.DataIntegrityTask             = False
-
-# This takes the default cfg values from the hcalMonitor base class and applies them to the subtasks.
-
-setHcalTaskValues(process.hcalMonitor)
-
-process.hcalMonitor.subSystemFolder = subsystem
-
-# Set individual Task values here
-#(otherwise they will remain set to the values specified for the hcalMonitor.)
-
-# Loosen HF hot cell thresholds when using cosmic reconstruction
-#process.hcalMonitor.HotCellMonitor_HF_energyThreshold = 20
-#process.hcalMonitor.HotCellMonitor_HF_persistentThreshold = 10
-process.hcalMonitor.HotCellMonitor_AllowedCalibTypes=[0] # ignore calibration (laser, raddam) events
-process.hcalMonitor.DeadCellMonitor_LBprescale=1 # set to 4 for online running
-
-
-# Dump out hflumi information to text file, if directory is specified
-process.hcalMonitor.BeamMonitor_lumiqualitydir=""
-#---------------------------------------------------------------------
-# Hcal DQM Client
-#---------------------------------------------------------------------
-process.load("DQM.HcalMonitorClient.HcalMonitorClient_cfi")
-process.load("DQM.HcalMonitorClient.ZDCMonitorClient_cfi")
-
-# hcalClient configurable values ------------------------
-# suppresses html output from HCalClient  
-process.hcalClient.baseHtmlDir = ''  # set to '' to ignore html output
-process.hcalClient.subSystemFolder  = subsystem
-
-# Set client settings to the same as monitor.
-# At the moment, this doesn't affect the client minErrorFlag
-# Summary Client is also unaffected, since we want that on all the time
-
-process.hcalClient.databasedir   = databasedir
-
-setHcalClientValuesFromMonitor(process.hcalClient,
-                               process.hcalMonitor,
-                               debug=debuglevel)
-
-# Keep Summary Client turned on
-process.hcalClient.SummaryClient        = True
-
-
 #----------------------------------------
 # Scheduling & Path to follow each event
 #-----------------------------------------
@@ -356,16 +284,6 @@ process.options = cms.untracked.PSet(
         'TooManyProducts', 
         'TooFewProducts')
 )
-
-# Allow even bad-quality digis
-#process.hcalDigis.FilterDataQuality=False
-
-
-# Set expected orbit time to 3560 (value should be 6 for run < 116401)
-# updated to 3559 in late 2009
-process.hcalDigis.ExpectedOrbitMessageTime= cms.untracked.int32(3559)
-# Set monitor value to -1 to skip check of IDLE BCN 
-process.hcalMonitor.DigiMonitor_ExpectedOrbitMessageTime = 3559
 
 # ----------------------
 # Trigger Unpacker Stuff
@@ -380,7 +298,6 @@ process.l1GtUnpack.DaqGtInputTag = 'source'
 # -----------------------
 
 process.p = cms.Path(process.hcalDigis
-                     #*process.hcalAllDigis  # use all digis in digi monitor?
                      *process.valHcalTriggerPrimitiveDigis
                      *process.l1GtUnpack
                      *process.horeco
@@ -388,20 +305,9 @@ process.p = cms.Path(process.hcalDigis
                      *process.hbhereco
                      *process.zdcreco
                      *process.hcalMonitor
-                     *process.zdcMonitor
-                     *process.hcalClient
-                     *process.zdcClient
+                     *process.hcalMonitorTasksOnlineSequence
+                     *process.newHcalClient
                      *process.dqmEnv
                      *process.dqmSaver
                      )
-
-#-----------------------------
-# Quality Tester 
-# will add switch to select histograms to be saved soon
-#-----------------------------
-#process.qTester = cms.EDFilter("QualityTester",
-#    prescaleFactor = cms.untracked.int32(1),
-#    qtList = cms.untracked.FileInPath('DQM/HcalMonitorClient/data/hcal_qualitytest_config.xml'),
-#    getQualityTestsFromFile = cms.untracked.bool(True)
-#)
 
