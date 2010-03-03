@@ -40,8 +40,8 @@
 /*
  * \file HcalMonitorModule.cc
  *
- * $Date: 2010/02/28 16:13:00 $
- * $Revision: 1.162.2.2 $
+ * $Date: 2010/03/03 11:25:59 $
+ * $Revision: 1.162.2.3 $
  * \author J Temple
  *
  * New version of HcalMonitorModule stores only a few necessary variables that other tasks need to grab
@@ -148,7 +148,6 @@ void HcalMonitorModule::beginRun(const Run& r, const EventSetup& c)
 	ieta>0 ? ++ieta: --ieta;
 
       double logstatus = log2(1.*status)+1;
-      cout <<"status = "<<status<<"  log = "<<logstatus<<endl;
       if (ChannelStatus.depth[depth-1]) ChannelStatus.depth[depth-1]->Fill(ieta,iphi,logstatus);
     }
   delete chanquality;
