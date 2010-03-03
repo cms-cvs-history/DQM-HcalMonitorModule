@@ -132,7 +132,7 @@ if (host<>None):
 process.DQM.collectorPort = 9190
 process.dqmSaver.convention = 'Online'
 process.dqmSaver.producer = 'DQM'
-process.dqmSaver.dirName="/tmp/temple/dqmdata/"
+process.dqmSaver.dirName=htmldir
 process.dqmEnv.subSystemFolder = subsystem
 # optionally change fileSaving  conditions
 # replace dqmSaver.prescaleLS =   -1
