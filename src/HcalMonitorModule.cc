@@ -40,8 +40,8 @@
 /*
  * \file HcalMonitorModule.cc
  *
- * $Date: 2010/03/03 11:25:59 $
- * $Revision: 1.162.2.3 $
+ * $Date: 2010/03/03 14:21:19 $
+ * $Revision: 1.162.2.4 $
  * \author J Temple
  *
  * New version of HcalMonitorModule stores only a few necessary variables that other tasks need to grab
@@ -226,14 +226,16 @@ void HcalMonitorModule::setup(void)
 
       meFEDS_    = dbe_->book1D("FEDs Unpacked","FEDs Unpacked; Hcal FEDs 700-731",1+(FEDNumbering::MAXHCALFEDID-FEDNumbering::MINHCALFEDID),FEDNumbering::MINHCALFEDID-0.5,FEDNumbering::MAXHCALFEDID+0.5);
 
-      meCalibType_ = dbe_->book1D("CalibrationType","Calibration Type",7,-0.5,6.5);
+      meCalibType_ = dbe_->book1D("CalibrationType","Calibration Type",9,-0.5,8.5);
       meCalibType_->setBinLabel(1,"Normal",1);
       meCalibType_->setBinLabel(2,"Ped",1);
       meCalibType_->setBinLabel(3,"RADDAM",1);
       meCalibType_->setBinLabel(4,"HBHEHPD",1);
       meCalibType_->setBinLabel(5,"HOHPD",1);
       meCalibType_->setBinLabel(6,"HFPMT",1);
-      
+      meCalibType_->setBinLabel(7,"ZDC",1);
+      meCalibType_->setBinLabel(8,"CASTOR",1);
+
       ChannelStatus.setup(dbe_,"ChannelStatus");
       stringstream x;
       for (unsigned int d=0;d<ChannelStatus.depth.size();++d)
