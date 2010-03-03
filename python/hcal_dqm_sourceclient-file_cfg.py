@@ -200,7 +200,7 @@ process.load("EventFilter.HcalRawToDigi.HcalRawToDigi_cfi")
 # AT LAST!  Load the DQM HcalMonitorModule!
 process.load("DQM.HcalMonitorModule.HcalMonitorModule_cfi")
 process.load("DQM.HcalMonitorTasks.HcalMonitorTasks_cfi")
-process.load("DQM.HcalMonitorClient.NewHcalMonitorClient_cfi")
+process.load("DQM.HcalMonitorClient.HcalMonitorClient_cfi")
 
 process.hcalNZSMonitor.debug=0
 process.hcalBeamMonitor.debug=0
@@ -212,8 +212,8 @@ process.hcalHotCellMonitor.online=True
 process.hcalDigiMonitor.online=True
 process.hcalNZSMonitor.online=True
 process.hcalRecHitMonitor.online=True
-process.newHcalClient.debug=10
-process.newHcalClient.baseHtmlDir="/tmp/temple"
+process.hcalClient.debug=8
+process.hcalClient.baseHtmlDir="/tmp/temple"
 
 process.load("RecoLocalCalo.HcalRecProducers.HcalHitReconstructor_hbhe_cfi")
 process.load("RecoLocalCalo.HcalRecProducers.HcalHitReconstructor_ho_cfi")
@@ -306,7 +306,7 @@ process.p = cms.Path(process.hcalDigis
                      *process.zdcreco
                      *process.hcalMonitor
                      *process.hcalMonitorTasksOnlineSequence
-                     *process.newHcalClient
+                     *process.hcalClient
                      *process.dqmEnv
                      *process.dqmSaver
                      )
