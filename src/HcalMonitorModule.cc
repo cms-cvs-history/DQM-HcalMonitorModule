@@ -1,10 +1,47 @@
 #include <DQM/HcalMonitorModule/interface/HcalMonitorModule.h>
 
+#include "DataFormats/HcalDetId/interface/HcalSubdetector.h"
+#include "DataFormats/FEDRawData/interface/FEDNumbering.h"
+#include "DataFormats/DetId/interface/DetId.h"
+#include "DataFormats/HcalDetId/interface/HcalDetId.h"
+#include "DataFormats/HcalDigi/interface/HcalCalibrationEventTypes.h"
+#include "DataFormats/HcalDigi/interface/HcalUnpackerReport.h"
+#include "DataFormats/Provenance/interface/EventID.h"  
+#include "DataFormats/FEDRawData/interface/FEDNumbering.h"
+#include "DataFormats/FEDRawData/interface/FEDRawDataCollection.h"
+
+#include "FWCore/Framework/interface/MakerMacros.h"
+#include "FWCore/Framework/interface/ESHandle.h"
+#include "FWCore/Framework/interface/Run.h"
+#include "FWCore/ServiceRegistry/interface/Service.h"
+
+#include "Geometry/Records/interface/IdealGeometryRecord.h"
+#include "Geometry/CaloGeometry/interface/CaloGeometry.h"
+
+#include "CondFormats/HcalObjects/interface/HcalChannelStatus.h"
+#include "CondFormats/HcalObjects/interface/HcalChannelQuality.h"
+#include "CondFormats/HcalObjects/interface/HcalCondObjectContainer.h"
+
+#include "EventFilter/HcalRawToDigi/interface/HcalDCCHeader.h"
+#include "EventFilter/HcalRawToDigi/interface/HcalHTRData.h"
+
+#include "DQMServices/Core/interface/DQMStore.h"
+#include "DQMServices/Core/interface/MonitorElement.h"
+
+#include "CalibFormats/HcalObjects/interface/HcalDbService.h"
+#include "CalibFormats/HcalObjects/interface/HcalDbRecord.h"
+
+#include <memory>
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
+
 /*
  * \file HcalMonitorModule.cc
  *
- * $Date: 2010/02/25 13:41:07 $
- * $Revision: 1.162.2.1 $
+ * $Date: 2010/02/28 16:13:00 $
+ * $Revision: 1.162.2.2 $
  * \author J Temple
  *
  * New version of HcalMonitorModule stores only a few necessary variables that other tasks need to grab
@@ -25,17 +62,19 @@ HcalMonitorModule::HcalMonitorModule(const ParameterSet& ps)
   init_=false; // first event sets up Monitor Elements and sets init_ to true
 
   // get ps objects
-  Online_                = ps.getParameter<bool>("online");
-  mergeRuns_             = ps.getParameter<bool>("mergeRuns");
-  enableCleanup_         = ps.getParameter<bool>("enableCleanup");
-  debug_                 = ps.getParameter<int>("debug");
+  Online_                = ps.getUntrackedParameter<bool>("online",false);
+  mergeRuns_             = ps.getUntrackedParameter<bool>("mergeRuns",false);
+  enableCleanup_         = ps.getUntrackedParameter<bool>("enableCleanup",false);
+  debug_                 = ps.getUntrackedParameter<int>("debug",0);
   
-  FEDRawDataCollection_  = ps.getParameter<edm::InputTag>("FEDRawDataCollection");
-  inputLabelReport_      = ps.getParameter<edm::InputTag>("UnpackerReport");
+  FEDRawDataCollection_  = ps.getUntrackedParameter<edm::InputTag>("FEDRawDataCollection");
+  inputLabelReport_      = ps.getUntrackedParameter<edm::InputTag>("UnpackerReport");
   
-  prefixME_         = ps.getParameter<string>("subSystemFolder");
+  prefixME_              = ps.getUntrackedParameter<string>("subSystemFolder","Hcal/");
   if (prefixME_.substr(prefixME_.size()-1,prefixME_.size())!="/")
     prefixME_.append("/");
+  
+  NLumiBlocks_           = ps.getUntrackedParameter<int>("NLumiBlocks",4000);
 
 } // HcalMonitorModule::HcalMonitorModule
 
@@ -65,6 +104,7 @@ void HcalMonitorModule::beginJob(void)
   meFEDS_=0;
   meIevt_=0;
   meIevtHist_=0;
+  meEvtsVsLS_=0;
   meProcessedEndLumi_=0;
   meHB_=0;
   meHE_=0;
@@ -86,8 +126,32 @@ void HcalMonitorModule::beginRun(const Run& r, const EventSetup& c)
       eMap_=pSetup->getHcalMapping(); 
     }
   if (mergeRuns_) return;
-   this->setup();
-   this->reset();
+  this->setup();
+  this->reset();
+
+  // Fill Channel Status map
+  edm::ESHandle<HcalChannelQuality> p;
+  c.get<HcalChannelQualityRcd>().get(p);
+  HcalChannelQuality* chanquality= new HcalChannelQuality(*p.product());
+  std::vector<DetId> mydetids = chanquality->getAllChannels();
+  for (std::vector<DetId>::const_iterator i = mydetids.begin();i!=mydetids.end();++i)
+    {
+      if (i->det()!=DetId::Hcal) continue; // not an hcal cell
+      HcalDetId id=HcalDetId(*i);
+      int status=(chanquality->getValues(id))->getValue();
+      if (status==0) continue;
+      int depth=id.depth();
+      if (depth<1 || depth>4) continue;
+      int ieta=id.ieta();
+      int iphi=id.iphi();
+      if (id.subdet()==HcalForward)
+	ieta>0 ? ++ieta: --ieta;
+
+      double logstatus = log2(1.*status)+1;
+      cout <<"status = "<<status<<"  log = "<<logstatus<<endl;
+      if (ChannelStatus.depth[depth-1]) ChannelStatus.depth[depth-1]->Fill(ieta,iphi,logstatus);
+    }
+  delete chanquality;
 } //HcalMonitorModule::beginRun(....)
 
 
@@ -110,6 +174,7 @@ void HcalMonitorModule::reset(void)
   if (meFEDS_) meFEDS_->Reset();
   if (meIevt_) meIevt_->Fill(0);
   if (meIevtHist_) meIevtHist_->Reset();
+  if (meEvtsVsLS_) meEvtsVsLS_->Reset();
   ievt_=0;
   if (meProcessedEndLumi_) meProcessedEndLumi_->Fill(-1);
   if (meHB_) meHB_->Fill(-1);
@@ -121,6 +186,8 @@ void HcalMonitorModule::reset(void)
   HOpresent_=0;
   HFpresent_=0;
   fedsListed_=false;
+  for (unsigned int i=0;i<ChannelStatus.depth.size();++i)
+    if (ChannelStatus.depth[i]) ChannelStatus.depth[i]->Reset();
 } // void HcalMonitorModule::reset(void)
 
 void HcalMonitorModule::setup(void)
@@ -130,7 +197,7 @@ void HcalMonitorModule::setup(void)
   init_=true;
   if (dbe_)
     {
-      dbe_->setCurrentFolder(prefixME_+"DQM Job Status");
+      dbe_->setCurrentFolder(prefixME_+"HcalInfo");
       meStatus_ = dbe_->bookInt("STATUS");
       if (meStatus_) meStatus_->Fill(-1);
       meRun_ = dbe_->bookInt("RUN");
@@ -141,6 +208,7 @@ void HcalMonitorModule::setup(void)
       if (meIevt_) meIevt_->Fill(-1);
       meIevtHist_ = dbe_->book1D("EventsInHcalMonitorModule","Events Seen by HcalMonitorModule",1,0.5,1.5);
       meIevtHist_->setBinLabel(1,"Nevents",1);
+      meEvtsVsLS_ = dbe_->book1D("EventsVsLS","Events vs. Luminosity Section;LS;# events",NLumiBlocks_,0.5,NLumiBlocks_+0.5);
       meOnline_ = dbe_->bookInt("Online");
       meOnline_->Fill((int)Online_);
       meProcessedEndLumi_ = dbe_->bookInt("EndLumiBlock_MonitorModule");
@@ -166,7 +234,15 @@ void HcalMonitorModule::setup(void)
       meCalibType_->setBinLabel(4,"HBHEHPD",1);
       meCalibType_->setBinLabel(5,"HOHPD",1);
       meCalibType_->setBinLabel(6,"HFPMT",1);
-
+      
+      ChannelStatus.setup(dbe_,"ChannelStatus");
+      stringstream x;
+      for (unsigned int d=0;d<ChannelStatus.depth.size();++d)
+	{
+	  x<<"1+log2(status) for HCAL depth "<<d+1;
+	  if (ChannelStatus.depth[d]) ChannelStatus.depth[d]->setTitle(x.str().c_str());
+	  x.str("");
+	}
     } // if (dbe_)
   return;
 } // void HcalMonitorModule::setup(void)
@@ -178,7 +254,7 @@ void HcalMonitorModule::cleanup(void)
   if (!enableCleanup_) return;
   if (dbe_)
     {
-      dbe_->setCurrentFolder(prefixME_+"DQM Job Status");
+      dbe_->setCurrentFolder(prefixME_+"HcalInfo");
       if ( meStatus_ ) 
 	dbe_->removeElement( meStatus_->getName() );
       meStatus_ = 0;
@@ -281,6 +357,7 @@ void HcalMonitorModule::analyze(const Event& e, const EventSetup& c)
   if (meEvt_) meEvt_->Fill(evtNumber_);
   if (meIevt_) meIevt_->Fill(ievt_);
   if (meIevtHist_) meIevtHist_->Fill(1);
+  if (meEvtsVsLS_) meEvtsVsLS_->Fill(e.luminosityBlock(),1);
   if (ievt_==1)
     {
       LogDebug("HcalMonitorModule") << "processing run " << runNumber_;

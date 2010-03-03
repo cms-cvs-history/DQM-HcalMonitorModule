@@ -5,54 +5,25 @@
  * \file HcalMonitorModule.h
  *
 
- * $Date: 2010/02/25 13:34:29 $
- * $Revision: 1.7.2.2 $
+ * $Date: 2010/02/28 16:13:01 $
+ * $Revision: 1.7.2.3 $
  * \author J. Temple
  *
 */
 
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/EDAnalyzer.h"
-#include "FWCore/Framework/interface/Event.h"
-#include "FWCore/Framework/interface/MakerMacros.h"
-#include "FWCore/Framework/interface/ESHandle.h"
-#include "FWCore/Framework/interface/Run.h"
-#include "FWCore/ServiceRegistry/interface/Service.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
+#include "FWCore/Framework/interface/Event.h"
 
-#include "DQMServices/Core/interface/DQMStore.h"
-#include "DQMServices/Core/interface/MonitorElement.h"
+#include "DQM/HcalMonitorTasks/interface/HcalEtaPhiHists.h"
 
-#include "EventFilter/HcalRawToDigi/interface/HcalDCCHeader.h"
-#include "EventFilter/HcalRawToDigi/interface/HcalHTRData.h"
+// forward declarations
 
-#include "CalibFormats/HcalObjects/interface/HcalDbService.h"
-#include "CalibFormats/HcalObjects/interface/HcalDbRecord.h"
-
-#include "CondFormats/HcalObjects/interface/HcalCondObjectContainer.h"
-
-#include "DataFormats/Provenance/interface/EventID.h"  
-#include "DataFormats/HcalDigi/interface/HcalUnpackerReport.h"
-#include "DataFormats/FEDRawData/interface/FEDRawDataCollection.h"
-#include "DataFormats/HcalDigi/interface/HcalCalibrationEventTypes.h"
-#include "DataFormats/HcalDetId/interface/HcalSubdetector.h"
-#include "DataFormats/FEDRawData/interface/FEDNumbering.h"
-#include "DataFormats/DetId/interface/DetId.h"
-#include "DataFormats/HcalDetId/interface/HcalDetId.h"
-
-#include "EventFilter/HcalRawToDigi/interface/HcalDCCHeader.h"
-#include "EventFilter/HcalRawToDigi/interface/HcalHTRData.h"
-
-#include "FWCore/Utilities/interface/CPUTimer.h"
-#include "Geometry/Records/interface/IdealGeometryRecord.h"
-#include "Geometry/CaloGeometry/interface/CaloGeometry.h"
-
-#include <memory>
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <string>
-
+class DQMStore;
+class MonitorElement;
+class FEDRawDataCollection;
+class HcalElectronicsMap;
 
 class HcalMonitorModule : public edm::EDAnalyzer
 {
@@ -122,6 +93,7 @@ public:
   MonitorElement* meHF_;
   MonitorElement* meIevt_;
   MonitorElement* meIevtHist_; 
+  MonitorElement* meEvtsVsLS_;
   MonitorElement* meProcessedEndLumi_;
   MonitorElement* meOnline_;
 
@@ -135,11 +107,13 @@ public:
   edm::InputTag FEDRawDataCollection_;
   edm::InputTag inputLabelReport_;
   std::string prefixME_;
+  int NLumiBlocks_;
 
   int HBpresent_, HEpresent_, HOpresent_, HFpresent_;
   DQMStore* dbe_;
 
   const HcalElectronicsMap*    eMap_;
+  EtaPhiHists ChannelStatus;
 
 }; //class HcalMonitorModule : public edm::EDAnalyzer
 
