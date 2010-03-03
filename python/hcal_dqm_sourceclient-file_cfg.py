@@ -16,6 +16,8 @@ if (host.find(".")>-1):
     host=string.split(host,".")[0]
 else:
     host=None
+user=os.getenv("USER")
+htmldir="/tmp/%s"%user
     
 subsystem="Hcal"        # specify subsystem name  (default is "Hcal")
 source = "PoolSource"   # specify source type (PoolSource, NewEventStreamFileReader, HcalTBSource)
@@ -213,7 +215,7 @@ process.hcalDigiMonitor.online=True
 process.hcalNZSMonitor.online=True
 process.hcalRecHitMonitor.online=True
 process.hcalClient.debug=8
-process.hcalClient.baseHtmlDir="/tmp/temple"
+process.hcalClient.baseHtmlDir=htmldir
 
 process.load("RecoLocalCalo.HcalRecProducers.HcalHitReconstructor_hbhe_cfi")
 process.load("RecoLocalCalo.HcalRecProducers.HcalHitReconstructor_ho_cfi")
