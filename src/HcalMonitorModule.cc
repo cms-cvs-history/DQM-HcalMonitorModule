@@ -40,8 +40,8 @@
 /*
  * \file HcalMonitorModule.cc
  *
- * $Date: 2010/03/03 14:21:19 $
- * $Revision: 1.162.2.4 $
+ * $Date: 2010/03/03 18:30:46 $
+ * $Revision: 1.162.2.5 $
  * \author J Temple
  *
  * New version of HcalMonitorModule stores only a few necessary variables that other tasks need to grab
@@ -129,28 +129,6 @@ void HcalMonitorModule::beginRun(const Run& r, const EventSetup& c)
   this->setup();
   this->reset();
 
-  // Fill Channel Status map
-  edm::ESHandle<HcalChannelQuality> p;
-  c.get<HcalChannelQualityRcd>().get(p);
-  HcalChannelQuality* chanquality= new HcalChannelQuality(*p.product());
-  std::vector<DetId> mydetids = chanquality->getAllChannels();
-  for (std::vector<DetId>::const_iterator i = mydetids.begin();i!=mydetids.end();++i)
-    {
-      if (i->det()!=DetId::Hcal) continue; // not an hcal cell
-      HcalDetId id=HcalDetId(*i);
-      int status=(chanquality->getValues(id))->getValue();
-      if (status==0) continue;
-      int depth=id.depth();
-      if (depth<1 || depth>4) continue;
-      int ieta=id.ieta();
-      int iphi=id.iphi();
-      if (id.subdet()==HcalForward)
-	ieta>0 ? ++ieta: --ieta;
-
-      double logstatus = log2(1.*status)+1;
-      if (ChannelStatus.depth[depth-1]) ChannelStatus.depth[depth-1]->Fill(ieta,iphi,logstatus);
-    }
-  delete chanquality;
 } //HcalMonitorModule::beginRun(....)
 
 
@@ -185,8 +163,6 @@ void HcalMonitorModule::reset(void)
   HOpresent_=0;
   HFpresent_=0;
   fedsListed_=false;
-  for (unsigned int i=0;i<ChannelStatus.depth.size();++i)
-    if (ChannelStatus.depth[i]) ChannelStatus.depth[i]->Reset();
 } // void HcalMonitorModule::reset(void)
 
 void HcalMonitorModule::setup(void)
@@ -236,14 +212,6 @@ void HcalMonitorModule::setup(void)
       meCalibType_->setBinLabel(7,"ZDC",1);
       meCalibType_->setBinLabel(8,"CASTOR",1);
 
-      ChannelStatus.setup(dbe_,"ChannelStatus");
-      stringstream x;
-      for (unsigned int d=0;d<ChannelStatus.depth.size();++d)
-	{
-	  x<<"1+log2(status) for HCAL depth "<<d+1;
-	  if (ChannelStatus.depth[d]) ChannelStatus.depth[d]->setTitle(x.str().c_str());
-	  x.str("");
-	}
     } // if (dbe_)
   return;
 } // void HcalMonitorModule::setup(void)
