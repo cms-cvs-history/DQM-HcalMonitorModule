@@ -40,8 +40,8 @@
 /*
  * \file HcalMonitorModule.cc
  *
- * $Date: 2010/03/03 18:30:46 $
- * $Revision: 1.162.2.5 $
+ * $Date: 2010/03/04 23:44:25 $
+ * $Revision: 1.162.2.6 $
  * \author J Temple
  *
  * New version of HcalMonitorModule stores only a few necessary variables that other tasks need to grab
@@ -392,7 +392,7 @@ void HcalMonitorModule::analyze(const Event& e, const EventSetup& c)
     CheckSubdetectorStatus(rawraw, HcalForward, *eMap_);
   
   // Try to get report information.  This seems like another task that only needs to be done once per run.
-  // Jason, can you confirm this?
+  // Jason, can you confirm this? Reply: Nope, this guy is the report from unpacking each event. It's in the right spot.
   edm::Handle<HcalUnpackerReport> report;  
   if (!(e.getByLabel(inputLabelReport_,report)))
     {
