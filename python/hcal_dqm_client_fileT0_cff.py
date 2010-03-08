@@ -4,15 +4,16 @@ from DQM.HcalMonitorClient.HcalMonitorClient_cfi import *
 hcalOfflineDQMClient = cms.Sequence(hcalClient)
 
 hcalClient.baseHtmlDir       = ''
-hcalClient.SummaryClient     = True
-hcalClient.DataFormatClient  = True
-hcalClient.DigiClient        = True
-hcalClient.RecHitClient      = True
-hcalClient.DeadCellClient    = True
-hcalClient.HotCellClient     = True
+# These will all need to be redefined for offline!
+#hcalClient.SummaryClient     = True
+#hcalClient.DataFormatClient  = True
+#hcalClient.DigiClient        = True
+#hcalClient.RecHitClient      = True
+#hcalClient.DeadCellClient    = True
+#hcalClient.HotCellClient     = True
 # Disable trigger primitive client until simulated TP digis included in sequence
-hcalClient.TrigPrimClient    = False
-hcalClient.ReferencePedestalClient    = False
-hcalClient.LEDClient         = False
-hcalClient.CaloTowerClient   = False
+#hcalClient.TrigPrimClient    = False
+#hcalClient.ReferencePedestalClient    = False
+#hcalClient.LEDClient         = False
+#hcalClient.CaloTowerClient   = False
 
