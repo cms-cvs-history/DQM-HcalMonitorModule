@@ -1,14 +1,15 @@
 import FWCore.ParameterSet.Config as cms
 import os
 import string
-
+import inputfiles
+from DQM.HcalMonitorTasks.HcalMonitorTasks_cfi import SetTaskParams
 process = cms.Process("HCALDQM")
 
 #------------------------------------------------------
 #  variables used in multiple places
 #-----------------------------------------------------                      
 
-maxevents      = 100  # maximum number of events to process
+maxevents      = 1000  # maximum number of events to process
 debuglevel     = 0     # larger value means more debug messages (0=no debug)
 databasedir  = ''       # Set to an existing directory to dump out database info
 host = os.getenv("HOST")
@@ -18,10 +19,12 @@ else:
     host=None
 user=os.getenv("USER")
 htmldir="/tmp/%s"%user
-    
+htmldir="" # no html output
+
+
 subsystem="Hcal"        # specify subsystem name  (default is "Hcal")
 source = "PoolSource"   # specify source type (PoolSource, NewEventStreamFileReader, HcalTBSource)
-source="NewEventStreamFileReader"
+#source="NewEventStreamFileReader"
 memcheck=False          # Dump out memory usage information
 
 #----------------------------
@@ -40,55 +43,16 @@ process.maxEvents = cms.untracked.PSet(
 
 if source=="PoolSource":
     process.source = cms.Source("PoolSource",
-                                
-                                fileNames = cms.untracked.vstring
-                                (
-        
-        
-        #'/store/express/Commissioning10/StreamExpress/ALCARECO/v3/000/128/298/D02B9B9E-631C-DF11-8590-000423D986C4.root',
-        #'/store/express/Commissioning10/OfflineMonitor/FEVTHLTALL/v3/000/128/298/0C0F63C7-621C-DF11-9592-000423D6B48C.root',
-        # Run with ZDC
-        '/store/data/BeamCommissioning09/Cosmics/RAW/v1/000/121/993/D04EA868-5FD6-DE11-B372-003048D2BE08.root',
-
-        # Collisions at 2.36 TeV
-        #'/store/data/BeamCommissioning09/MinimumBias/RAW/v1/000/124/120/F6ADE109-6BE8-DE11-9680-000423D991D4.root',
-
-        # A (relatively) recent run
-        #'/store/data/Commissioning09/Calo/RAW/v3/000/118/962/127CDC23-8FC5-DE11-B66D-000423D991D4.root',
-        # Calibration triggers only
-        #'/store/data/Commissioning09/TestEnables/RAW/v3/000/118/074/84ED101B-03C0-DE11-B33C-000423D94E70.root',
-        # cosmics run with known hot cell in HF
-        #'/store/data/Commissioning08/Cosmics/RAW/v1/000/067/838/006945C8-40A5-DD11-BD7E-001617DBD556.root',
-        #'/store/data/Commissioning08/Cosmics/RAW/v1/000/067/838/FEEE9F50-61A5-DD11-835E-000423D98DD4.root',
-        # NON-ZERO-SUPPRESSED RUN
-        #'/store/data/Commissioning08/Cosmics/RAW/v1/000/064/103/2A983512-E18F-DD11-BE84-001617E30CA4.root'
-        #'/store/data/Commissioning08/Cosmics/RAW/v1/000/066/904/02944F1F-EB9E-DD11-8D88-001D09F2A465.root',
-        )
+                                # Specify root files to use as inputs here
+                                fileNames = cms.untracked.vstring(inputfiles.makelocal(inputfiles.rootfiles,"/tmp/temple/inputfiles"))
                                 )
 
 ### Case 2:  Run on raw .dat files
 
 elif source=="NewEventStreamFileReader":
     process.source = cms.Source("NewEventStreamFileReader",
-                                fileNames = cms.untracked.vstring(
-
-'file:/tmp/temple/inputfiles/Data.00128766.0001.A.storageManager.00.0000.dat',
-'file:/tmp/temple/inputfiles/Data.00128766.0021.A.storageManager.01.0000.dat',
-'file:/tmp/temple/inputfiles/Data.00128766.0041.A.storageManager.02.0000.dat',
-'file:/tmp/temple/inputfiles/Data.00128766.0061.A.storageManager.03.0000.dat',
-'file:/tmp/temple/inputfiles/Data.00128766.0081.A.storageManager.04.0000.dat',
-'file:/tmp/temple/inputfiles/Data.00128766.0101.A.storageManager.05.0000.dat',
-'file:/tmp/temple/inputfiles/Data.00128766.0121.A.storageManager.06.0000.dat',
-'file:/tmp/temple/inputfiles/Data.00128766.0141.A.storageManager.07.0000.dat',
-'file:/tmp/temple/inputfiles/Data.00128766.0161.A.storageManager.08.0000.dat',
-'file:/tmp/temple/inputfiles/Data.00128766.0181.A.storageManager.09.0000.dat',
-'file:/tmp/temple/inputfiles/Data.00128766.0201.A.storageManager.10.0000.dat',
-'file:/tmp/temple/inputfiles/Data.00128766.0221.A.storageManager.11.0000.dat',
-'file:/tmp/temple/inputfiles/Data.00128766.0241.A.storageManager.12.0000.dat',
-'file:/tmp/temple/inputfiles/Data.00128766.0261.A.storageManager.13.0000.dat',
-'file:/tmp/temple/inputfiles/Data.00128766.0281.A.storageManager.14.0000.dat',
-
-        )
+                                # Specify .dat files to use here
+                                fileNames = cms.untracked.vstring(inputfiles.datfiles)
                                 )
 
 ### Case 3:  Run on HCAL local runs (pedestal, LED, etc.).  These files are stored on /bigspool/usc/ in cmshcal01, etc.
@@ -116,7 +80,7 @@ elif source=="HcalTBSource":
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 # Reduce frequency of MessageLogger event output messages
-process.MessageLogger.cerr.FwkReport.reportEvery = 200
+process.MessageLogger.cerr.FwkReport.reportEvery = 100
 #process.MessageLogger.cerr.FwkReport.reportEvery = 1
 
 #----------------------------
@@ -132,7 +96,7 @@ if (host<>None):
 process.DQM.collectorPort = 9190
 process.dqmSaver.convention = 'Online'
 process.dqmSaver.producer = 'DQM'
-process.dqmSaver.dirName=htmldir
+process.dqmSaver.dirName='/tmp/temple'
 process.dqmEnv.subSystemFolder = subsystem
 # optionally change fileSaving  conditions
 # replace dqmSaver.prescaleLS =   -1
@@ -204,18 +168,30 @@ process.load("DQM.HcalMonitorModule.HcalMonitorModule_cfi")
 process.load("DQM.HcalMonitorTasks.HcalMonitorTasks_cfi")
 process.load("DQM.HcalMonitorClient.HcalMonitorClient_cfi")
 
-process.hcalNZSMonitor.debug=0
-process.hcalBeamMonitor.debug=0
 process.hcalBeamMonitor.lumiqualitydir="/tmp/temple/dqmdata"
-process.hcalBeamMonitor.online=True
+
+# Set all tasks to online
 process.hcalMonitor.online=True
-process.hcalDeadCellMonitor.online=True
-process.hcalHotCellMonitor.online=True
-process.hcalDigiMonitor.online=True
-process.hcalNZSMonitor.online=True
-process.hcalRecHitMonitor.online=True
-process.hcalClient.debug=8
+SetTaskParams(process,"online","True")
+#process.hcalClient.online=True  # hcalClient doesn't have online switch -- runs the same regardless
+
+process.hcalMonitor.subsystemFolder=subsystem
+SetTaskParams(process,"subSystemFolder",subsystem)
+process.hcalClient.subsystemFolder=subsystem
+
+process.hcalBeamMonitor.skipOutOfOrderLS=False
+process.hcalDeadCellMonitor.skipOutOfOrderLS=False
+process.hcalDeadCellMonitor.makeDiagnostics=True
+process.hcalHotCellMonitor.skipOutOfOrderLS=False
+process.hcalDigiMonitor.skipOutOfOrderLS=False
+process.hcalNZSMonitor.skipOutOfOrderLS=False
+process.hcalRecHitMonitor.skipOutOfOrderLS=False
+process.hcalTrigPrimMonitor.skipOutOfOrderLS=False
+
+process.hcalClient.debug=0
 process.hcalClient.baseHtmlDir=htmldir
+process.hcalClient.databaseDir=htmldir
+process.hcalClient.minevents=1
 
 process.load("RecoLocalCalo.HcalRecProducers.HcalHitReconstructor_hbhe_cfi")
 process.load("RecoLocalCalo.HcalRecProducers.HcalHitReconstructor_ho_cfi")
