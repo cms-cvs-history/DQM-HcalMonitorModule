@@ -2,7 +2,6 @@ import FWCore.ParameterSet.Config as cms
 import os
 import string
 import inputfiles
-from DQM.HcalMonitorTasks.HcalMonitorTasks_cfi import SetTaskParams
 process = cms.Process("HCALDQM")
 
 #------------------------------------------------------
@@ -44,7 +43,10 @@ process.maxEvents = cms.untracked.PSet(
 if source=="PoolSource":
     process.source = cms.Source("PoolSource",
                                 # Specify root files to use as inputs here
-                                fileNames = cms.untracked.vstring(inputfiles.makelocal(inputfiles.rootfiles,"/tmp/temple/inputfiles"))
+                                fileNames = cms.untracked.vstring(
+        #inputfiles.makelocal(inputfiles.rootfiles,"/tmp/temple/inputfiles")
+        inputfiles.rootfiles
+        )
                                 )
 
 ### Case 2:  Run on raw .dat files
@@ -96,7 +98,7 @@ if (host<>None):
 process.DQM.collectorPort = 9190
 process.dqmSaver.convention = 'Online'
 process.dqmSaver.producer = 'DQM'
-process.dqmSaver.dirName='/tmp/temple'
+process.dqmSaver.dirName='/tmp/%s'%user
 process.dqmEnv.subSystemFolder = subsystem
 # optionally change fileSaving  conditions
 # replace dqmSaver.prescaleLS =   -1
@@ -168,16 +170,7 @@ process.load("DQM.HcalMonitorModule.HcalMonitorModule_cfi")
 process.load("DQM.HcalMonitorTasks.HcalMonitorTasks_cfi")
 process.load("DQM.HcalMonitorClient.HcalMonitorClient_cfi")
 
-process.hcalBeamMonitor.lumiqualitydir="/tmp/temple/dqmdata"
-
-# Set all tasks to online
-process.hcalMonitor.online=True
-SetTaskParams(process,"online","True")
-#process.hcalClient.online=True  # hcalClient doesn't have online switch -- runs the same regardless
-
-process.hcalMonitor.subsystemFolder=subsystem
-SetTaskParams(process,"subSystemFolder",subsystem)
-process.hcalClient.subsystemFolder=subsystem
+process.hcalBeamMonitor.lumiqualitydir="/tmp/%s/"%user
 
 process.hcalBeamMonitor.skipOutOfOrderLS=False
 process.hcalDeadCellMonitor.skipOutOfOrderLS=False
