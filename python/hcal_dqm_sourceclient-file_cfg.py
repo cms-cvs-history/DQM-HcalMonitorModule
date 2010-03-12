@@ -1,7 +1,10 @@
 import FWCore.ParameterSet.Config as cms
 import os
 import string
-import inputfiles
+try:
+    import inputfiles
+except:
+    print "Cannot import file inputfiles.py.  Proceeding anyway..."
 process = cms.Process("HCALDQM")
 
 #------------------------------------------------------
