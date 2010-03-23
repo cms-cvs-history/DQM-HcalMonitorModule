@@ -11,7 +11,7 @@ hcalClient.enabledClients    = ["DeadCellMonitor",
                                 "RecHitMonitor",
                                 "DigiMonitor",
                                 "RawDataMonitor",
-                                "TrigPrimMonitor",
+                                #"TrigPrimMonitor", # can't enable trig prim monitor, because no trig sim available offline!
                                 "NZSMonitor",
                                 "BeamMonitor",
                                 "DetDiagNoiseMonitor",
